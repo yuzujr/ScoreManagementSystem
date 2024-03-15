@@ -1,0 +1,318 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include"student-grademanager.h"
+#include"student.h"
+
+extern char allCourse[100][100];
+extern float credit[100];
+
+typedef struct Student Student;
+
+extern  Student* find_result[100];
+
+void init_find_result()
+{
+	for (int i = 0; i < 100; i++) {
+		find_result[i] = NULL;
+	}
+	return;
+}
+
+stu_list* bulid()
+{
+	stu_list* head;
+	head = (stu_list*)malloc(sizeof(stu_list));
+	head->next = NULL;
+	head->prev = NULL;
+	return head;
+}
+
+stu_list* init_list(stu_list* head)
+{
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+		stu_list* v;
+		v = p;
+		p = p->next;
+		free(v);
+	}
+	head->next = NULL;
+	head->prev = NULL;
+	return head;
+}
+
+void insert_stu(stu_list* pos, Student* stu)
+{
+	stu_list* v,*q;
+	v = (stu_list*)malloc(sizeof(stu_list));
+	v->m_stu = *stu;
+	
+	if (pos->next == NULL) {
+		pos->next = v;
+		v->next = NULL;
+		v->prev = pos;
+		
+	}
+	else {
+		q = pos->next;
+		pos->next = v;
+		v->next = q;
+		v->prev = pos;
+		q->prev = v;
+	}
+}
+
+stu_list* sort_ascend(stu_list* head)
+{
+	stu_list* p0, * p, * r0, * r, * tmp;
+	p0 = r0 = tmp = NULL;
+	p0 = head;
+	p = head->next;
+	while (p != NULL)
+	{
+		r = head->next;
+		while (r->m_stu.stu_grade_point < p->m_stu.stu_grade_point && r != p)
+		{
+			r0 = r;
+			r = r->next;
+		}
+		if (r != p)
+		{
+			tmp = p;
+			stu_list* q = p->next;
+			p0->next = q;
+			if(q!=NULL)q->prev = p0;
+			p = p0;
+			if (r == head->next)
+			{
+				head->next = tmp;
+				tmp->next = r;
+				r->prev = tmp;
+				tmp->prev = head;
+			}
+			else {
+				r0->next = tmp;
+				tmp->next = r;
+				r->prev = tmp;
+				tmp->prev = r0;
+			}
+		}
+		p0 = p;
+		p = p->next;
+	}
+	return head;
+}
+
+stu_list* sort_descend(stu_list* head)
+{
+	stu_list* p0, * p, * r0, * r, * tmp;
+	p0 = r0 = tmp = NULL;
+	p0 = head;
+	p = head->next;
+	while (p != NULL)
+	{
+		r = head->next;
+		while (r->m_stu.stu_grade_point > p->m_stu.stu_grade_point && r != p)
+		{
+			r0 = r;
+			r = r->next;
+		}
+		if (r != p)
+		{
+			tmp = p;
+			stu_list* q = p->next;
+			p0->next = q;
+			if (q != NULL)q->prev = p0;
+			p = p0;
+			if (r == head->next)
+			{
+				head->next = tmp;
+				tmp->next = r;
+				r->prev = tmp;
+				tmp->prev = head;
+			}
+			else {
+				r0->next = tmp;
+				tmp->next = r;
+				r->prev = tmp;
+				tmp->prev = r0;
+			}
+		}
+		p0 = p;
+		p = p->next;
+	}
+	return head;
+}
+
+int find_stu_num(stu_list* head, char stu_num[])
+{
+	init_find_result();
+	int number = 0;
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+		if (strcmp(p->m_stu.stu_number, stu_num))
+		{
+			find_result[number] = &p->m_stu;
+			number++;
+		}
+	}
+	return number;
+}
+
+int find_stu_name(stu_list* head, char name[])
+{
+	init_find_result();
+	int number = 0;
+	stu_list* p = head->next;
+	while(p != NULL)
+	{
+		if (strcmp(p->m_stu.stu_name, name))
+		{
+			find_result[number] =&p->m_stu;
+			number++;
+		}
+	}
+	return number;
+}
+
+int find_stu_college(stu_list* head, char college[])
+{
+	init_find_result();
+	int number = 0;
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+		if (strcmp(p->m_stu.stu_college, college))
+		{
+			find_result[number] = &p->m_stu;
+			number++;
+		}
+	}
+	return number;
+}
+
+int find_stu_major(stu_list* head, char major[])
+{
+	init_find_result();
+	int number = 0;
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+		if (strcmp(p->m_stu.stu_major, major))
+		{
+			find_result[number] = &p->m_stu;
+			number++;
+		}
+	}
+	return number;
+}
+
+int find_stu_class(stu_list* head, char college[],int classnumber)
+{
+	init_find_result();
+	int number = 0;
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+        if (strcmp(p->m_stu.stu_college, college)&&p->m_stu.stu_classnum==classnumber)
+		{
+			find_result[number] = &p->m_stu;
+			number++;
+		}
+	}
+	return number;
+}
+
+void delete_stu(stu_list* pos)
+{
+	if (pos->prev == NULL)return;
+	else if (pos->next == NULL) {
+		stu_list* p0 = pos->prev;
+		p0->next = NULL;
+		free(pos);
+	}
+	else {
+		stu_list* p0 = pos->prev, * p = pos->next;
+		p0->next = p;
+		p->prev = p0;
+		free(pos);
+	}
+	return;
+}
+
+void modify_stu(stu_list* pos, Student* new_stu)
+{
+	pos->m_stu = *new_stu;
+	return;
+}
+
+stu_list* load_data(stu_list* head)
+{
+	stu_list* tail;
+	tail = (stu_list*)malloc(sizeof(stu_list));
+	tail = head;
+	FILE* fp;
+    fp= fopen("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt", "r");
+	if (fp == NULL) {
+        //printf("文件无法打开");
+        return head;//如果head->next为空，则证明打开失败
+	}
+	else {
+		while (!feof(fp))
+		{
+			stu_list* p;
+			p = (stu_list*)malloc(sizeof(stu_list));
+			fscanf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
+			fscanf(fp, "%d %lf %d %d", &p->m_stu.stu_classnum,&p->m_stu.stu_grade_point, &p->m_stu.stu_course_num, &p->m_stu.stu_award_num);
+			/*printf("%s %s %s %s %s %d %.1lf %d %d\n", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num);*/
+			for (int i = 0; i < p->m_stu.stu_course_num; i++)
+			{
+				fscanf(fp, "%lf %lf", &p->m_stu.stu_course_grade[i][0], &p->m_stu.stu_course_grade[i][1]);
+
+			}
+			for (int i = 0; i < p->m_stu.stu_award_num; i++)
+			{
+				fscanf(fp, "%s", p->m_stu.stu_award[i]);
+			}
+			p->prev = tail;
+			tail->next = p;
+			tail = p;
+			p->next = NULL;
+		}
+	}
+	fclose(fp);
+	return head;
+}
+
+void printAll(stu_list* head)
+{
+	stu_list* p = head->next;
+	while (p != NULL)
+	{
+		printf("姓名：%s\n", p->m_stu.stu_name);
+		printf("学号：%s  密码：%s\n", p->m_stu.stu_number,p->m_stu.stu_password);
+		printf("学院：%s  专业：%s  绩点：%.1lf\n", p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_grade_point);
+		printf("课程及其成绩：\n");
+		for (int i = 0; i < p->m_stu.stu_course_num; i++)
+		{
+			printf("课程%d：%s  成绩：%.1lf\n", i + 1, allCourse[(int)p->m_stu.stu_course_grade[i][0]], p->m_stu.stu_course_grade[i][1]);
+		}
+		printf("获奖信息：\n");
+		for (int i = 0; i < p->m_stu.stu_award_num; i++)
+		{
+			printf("奖项%d：%s\n",i+1, p->m_stu.stu_award[i]);
+		}
+		p = p->next;
+	}	
+}
+
+void printStudent(Student* stu){
+
+}
+
+void printFindResult(int size){
+    for(int i=0;i<size;i++){
+        printStudent(find_result[i]);
+    }
+}

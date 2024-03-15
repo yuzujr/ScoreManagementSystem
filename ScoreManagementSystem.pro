@@ -17,6 +17,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mypushbutton.cpp \
+    student-grademanager.c \
     studentwindow.cpp
 
 HEADERS += \
@@ -28,6 +29,8 @@ HEADERS += \
     loginwidget.h \
     mainwindow.h \
     mypushbutton.h \
+    student-grademanager.h \
+    student.h \
     studentwindow.h
 
 FORMS += \

@@ -40,7 +40,7 @@ int adminLogInCheck(char* account,char* passwd){
     FILE* pf;
     char faccount[100],fpasswd[100],restOfLine[100];
     //打开学生信息文件
-    pf=fopen("adminInfo.txt","r");
+    pf=fopen("D:/c++/Qt/ScoreManagementSystem/adminInfo.txt","r");
     //检查是否打开成功
     if(pf==NULL){
         return -1;//即失败，将在调用处弹出警告
