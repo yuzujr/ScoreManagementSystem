@@ -10,18 +10,19 @@ namespace Ui {
 class LogInWidget : public QWidget {
     Q_OBJECT
 
-public:
+  public:
     explicit LogInWidget(QWidget *parent = nullptr);
     void changeClient(QString);
     void changeAccount(QString);
     bool checkResult(int);
     ~LogInWidget();
 
-private:
+  private:
     Ui::LogInWidget *ui;
-signals:
+  signals:
     loginCanceled();
     loginSucceed();
+    loginFinished();
 };
 
 #endif // LOGINWIDGET_H

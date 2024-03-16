@@ -8,8 +8,13 @@
 
 StudentWindow::StudentWindow(QWidget *parent)
     : QMainWindow(parent) {
-    this->resize(600, 400);
-    LogInWidget *logIn = new LogInWidget(this);
+    //设置窗口图标
+    this->setWindowIcon(QIcon("://JLUicon.png"));
+    //设置窗口标题
+    this->setWindowTitle("学生界面");
+    //登录窗口
+    LogInWidget *logIn = new LogInWidget();
+    this->setCentralWidget(logIn);
     //关闭后销毁
     logIn->setAttribute(Qt::WA_DeleteOnClose);
     //取消登录
@@ -54,12 +59,6 @@ StudentWindow::StudentWindow(QWidget *parent)
 }
 
 void StudentWindow::paintEvent(QPaintEvent *event) {
-    //设置窗口图标
-    this->setWindowIcon(QIcon("://JLUicon.png"));
-
-    //设置窗口标题
-    this->setWindowTitle("学生界面");
-
     //创建主界面
     QPainter painter(this);
     QPixmap pix;

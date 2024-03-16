@@ -33,7 +33,7 @@ changePasswdDialog::changePasswdDialog(QWidget *parent) :
             } else if (ret == -2) {
                 QMessageBox::information(this, "提示", "文件修改失败！");
             } else if (ret == -3) {
-                QMessageBox::information(this, "提示", "密码过短，不得少于9个字符！");
+                QMessageBox::information(this, "提示", "密码过短，不得少于8个字符！");
             }
         }//修改密码
     });

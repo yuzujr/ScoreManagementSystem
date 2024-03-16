@@ -1,5 +1,3 @@
-//数据读入，存储到txt中
-//1.学生信息 2.管理员信息
 #pragma once
 #include "dataProcess.h"
 //移动文件指针到行首
@@ -96,13 +94,13 @@ int modify_file(const char* filename,const int linenumber,const char *new_conten
 //1.字符串错误，
 //2.无法删除和改名
 int changePasswdTo(char* newPasswd){
-    if(strlen(newPasswd)<=8){
-        return -3;
+    if(strlen(newPasswd) < 8){
+        return -3;//密码过短
     }
     FILE* test;
-    //检查新密码是否合法(即不含有汉字)
+    //检查新密码是否合法(即不含有汉字和字符)
     if(!isPasswordValid(newPasswd)){
-        return -1;
+        return -1;//密码不合法
     }
     // 得到原行
     char buffer[1000];
@@ -151,10 +149,10 @@ int changePasswdTo(char* newPasswd){
     }
     fputs(buffer,test);
     if(modify_file("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt",lineNumber,buffer)==-1){
-            return -2;
+            return -2;//文件打开失败
     }
     else{
-    return 0;
+    return 0;//修改成功
     }
 }
 

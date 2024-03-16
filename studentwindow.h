@@ -5,12 +5,12 @@
 
 class StudentWindow : public QMainWindow {
     Q_OBJECT
-public:
+  public:
     explicit StudentWindow(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
     void closeEvent(QCloseEvent *event);
     ~StudentWindow();
-signals:
+  signals:
     backToMenu();
     closed();
 };

@@ -8,7 +8,10 @@
 
 AdminWindow::AdminWindow(QWidget *parent)
     : QMainWindow{parent} {
-    this->resize(600, 400);
+    //设置窗口图标
+    this->setWindowIcon(QIcon("://JLUicon.png"));
+    //设置窗口标题
+    this->setWindowTitle("管理员界面");
     LogInWidget *logIn = new LogInWidget(this);
     //关闭后销毁
     logIn->setAttribute(Qt::WA_DeleteOnClose);
@@ -26,12 +29,6 @@ AdminWindow::AdminWindow(QWidget *parent)
 }
 
 void AdminWindow::paintEvent(QPaintEvent *event) {
-    //设置窗口图标
-    this->setWindowIcon(QIcon("://JLUicon.png"));
-
-    //设置窗口标题
-    this->setWindowTitle("管理员界面");
-
     //创建主界面
     QPainter painter(this);
     QPixmap pix;

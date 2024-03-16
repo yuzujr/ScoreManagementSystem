@@ -45,11 +45,6 @@ LogInWidget::LogInWidget(QWidget *parent) :
             emit loginCanceled();
         });
     });
-
-    //测试入口
-    connect(ui->pushButton_3, &QPushButton::clicked, [ = ]() {
-        emit loginSucceed();
-    });
 }
 
 //改变界面

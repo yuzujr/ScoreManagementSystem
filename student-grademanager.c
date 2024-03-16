@@ -275,6 +275,7 @@ stu_list* load_data(stu_list* head)
 			{
 				fscanf(fp, "%s", p->m_stu.stu_award[i]);
 			}
+            fscanf(fp,"\n");
 			p->prev = tail;
 			tail->next = p;
 			tail = p;

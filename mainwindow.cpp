@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     //设置界面标题
     QLabel *title = new QLabel;
     title->setParent(this);
+    //设置窗口图标
+    this->setWindowIcon(QIcon("://JLUicon.png"));
+    //设置窗口标题
+    this->setWindowTitle("吉林大学成绩管理系统");
+    //设置字体
     QFont font;
     font.setFamily("方正粗黑宋简体");
     font.setPointSize(30);
@@ -91,15 +96,9 @@ MainWindow::MainWindow(QWidget *parent)
             exit(0);
         });//从管理员界面直接退出
     });
-
+    qDebug() << this->width() << this->height();
 }
 void MainWindow::paintEvent(QPaintEvent *event) {
-    //设置窗口图标
-    this->setWindowIcon(QIcon("://JLUicon.png"));
-
-    //设置窗口标题
-    this->setWindowTitle("吉林大学成绩管理系统");
-
     //创建主界面
     QPainter painter(this);
     QPixmap pix;
