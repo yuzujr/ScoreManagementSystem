@@ -249,41 +249,116 @@ void modify_stu(stu_list* pos, Student* new_stu)
 
 stu_list* load_data(stu_list* head)
 {
-	stu_list* tail;
-	tail = (stu_list*)malloc(sizeof(stu_list));
-	tail = head;
-	FILE* fp;
-    fp= fopen("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt", "r");
-	if (fp == NULL) {
-        //printf("文件无法打开");
-        return head;//如果head->next为空，则证明打开失败
-	}
-	else {
-		while (!feof(fp))
-		{
-			stu_list* p;
-			p = (stu_list*)malloc(sizeof(stu_list));
-			fscanf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
-			fscanf(fp, "%d %lf %d %d", &p->m_stu.stu_classnum,&p->m_stu.stu_grade_point, &p->m_stu.stu_course_num, &p->m_stu.stu_award_num);
-			/*printf("%s %s %s %s %s %d %.1lf %d %d\n", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num);*/
-			for (int i = 0; i < p->m_stu.stu_course_num; i++)
-			{
-				fscanf(fp, "%lf %lf", &p->m_stu.stu_course_grade[i][0], &p->m_stu.stu_course_grade[i][1]);
+    stu_list* tail;
+    tail = (stu_list*)malloc(sizeof(stu_list));
+    tail = head;
+    FILE* fp;
+    fp= fopen("C:\\Users\\12894\\source\\repos\\学生成绩管理系统\\student.txt", "r");
+    if (fp == NULL) {
+        printf("文件无法打开");
+        return head;
+    }
+    else {
+        while (!feof(fp))
+        {
+            stu_list* p;
+            p = (stu_list*)malloc(sizeof(stu_list));
+            fscanf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
+            fscanf(fp, "%d %lf %d %d %d", &p->m_stu.stu_classnum,&p->m_stu.stu_grade_point, &p->m_stu.stu_course_num, &p->m_stu.stu_award_num,&p->m_stu.stu_paper_num);
+            /*printf("%s %s %s %s %s %d %.1lf %d %d\n", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num);*/
 
-			}
-			for (int i = 0; i < p->m_stu.stu_award_num; i++)
-			{
-				fscanf(fp, "%s", p->m_stu.stu_award[i]);
-			}
-            fscanf(fp,"\n");
-			p->prev = tail;
-			tail->next = p;
-			tail = p;
-			p->next = NULL;
-		}
-	}
-	fclose(fp);
-	return head;
+            //课程及成绩
+            for (int i = 0; i < p->m_stu.stu_course_num; i++)
+            {
+                fscanf(fp, "%lf %lf", &p->m_stu.stu_course_grade[i][0], &p->m_stu.stu_course_grade[i][1]);
+
+            }
+
+            //获奖项目
+            for (int i = 0; i < p->m_stu.stu_award_num; i++)
+            {
+                fscanf(fp,"%s %s %d", p->m_stu.stu_award[i].award_name, p->m_stu.stu_award[i].award_hosted_by, &p->m_stu.stu_award[i].award_winner_num);
+
+                for (int j = 0; j < p->m_stu.stu_award[i].award_winner_num; j++)
+                {
+                    fscanf(fp, "%s", p->m_stu.stu_award[i].award_allwinner[j]);
+                }
+
+                fscanf(fp, "%lf %c %s", &p->m_stu.stu_award[i].is_extra_credit, &p->m_stu.stu_award[i].competition_level, p->m_stu.stu_award[i].award_time);
+            }
+
+            //论文
+            for (int i = 0; i < p->m_stu.stu_paper_num; i++)
+            {
+                fscanf(fp, "%s %d",p->m_stu.stu_paper[i].paper_name,&p->m_stu.stu_paper[i].writer_num);
+
+                for (int j = 0; j < p->m_stu.stu_paper[i].writer_num; j++)
+                {
+                    fscanf(fp, "%s", p->m_stu.stu_paper[i].paper_allwriter[j]);
+                }
+
+                fscanf(fp, "%s %s %lf", p->m_stu.stu_paper[i].paper_periodicalname, p->m_stu.stu_paper[i].paper_time, &p->m_stu.stu_paper[i].paper_extra_credit);
+            }
+
+
+            fscanf(fp, "\n");
+            p->prev = tail;
+            tail->next = p;
+            tail = p;
+            p->next = NULL;
+        }
+    }
+    fclose(fp);
+    return head;
+
+}
+
+void save_data(stu_list* head)
+{
+    stu_list* p = head->next;
+    FILE* fp;
+    fp = fopen("C:\\Users\\12894\\source\\repos\\学生成绩管理系统\\student.txt", "w");
+    while (p != NULL)
+    {
+        fprintf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
+        fprintf(fp, " %d %lf %d %d %d", p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num,p->m_stu.stu_paper_num);
+        for (int i = 0; i < p->m_stu.stu_course_num; i++)
+        {
+            fprintf(fp, " %lf %lf", p->m_stu.stu_course_grade[i][0], p->m_stu.stu_course_grade[i][1]);
+
+        }
+
+        //获奖项目
+        for (int i = 0; i < p->m_stu.stu_award_num; i++)
+        {
+            fprintf(fp, "%s %s %d", p->m_stu.stu_award[i].award_name, p->m_stu.stu_award[i].award_hosted_by, p->m_stu.stu_award[i].award_winner_num);
+
+            for (int j = 0; j < p->m_stu.stu_award[i].award_winner_num; j++)
+            {
+                fprintf(fp, "%s", p->m_stu.stu_award[i].award_allwinner[j]);
+            }
+
+            fprintf(fp, "%lf %c %s", p->m_stu.stu_award[i].is_extra_credit, &p->m_stu.stu_award[i].competition_level, p->m_stu.stu_award[i].award_time);
+        }
+
+        //论文
+        for (int i = 0; i < p->m_stu.stu_paper_num; i++)
+        {
+            fprintf(fp, "%s %d", p->m_stu.stu_paper[i].paper_name, p->m_stu.stu_paper[i].writer_num);
+
+            for (int j = 0; j < p->m_stu.stu_paper[i].writer_num; j++)
+            {
+                fprintf(fp, "%s", p->m_stu.stu_paper[i].paper_allwriter[j]);
+            }
+
+            fprintf(fp, "%s %s %lf", p->m_stu.stu_paper[i].paper_periodicalname, p->m_stu.stu_paper[i].paper_time, p->m_stu.stu_paper[i].paper_extra_credit);
+        }
+
+        fprintf(fp, "\n");
+        p = p->next;
+    }
+    fclose(fp);
+    return;
 }
 
 void printAll(stu_list* head)

@@ -1,5 +1,6 @@
 #pragma once
 #include "dataProcess.h"
+
 //移动文件指针到行首
 void moveToLineStart(FILE* pf) {
   int pos = ftell(pf);
@@ -15,10 +16,6 @@ void moveToLineStart(FILE* pf) {
     rewind(pf);
   }
 }
-
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 
 bool containsChinese(const char *str) {
     while (*str) {
@@ -91,23 +88,28 @@ int modify_file(const char* filename,const int linenumber,const char *new_conten
         fclose(temp);
         return 0;
 }
-//1.字符串错误，
-//2.无法删除和改名
+
+//修改密码
 int changePasswdTo(char* newPasswd){
     if(strlen(newPasswd) < 8){
         return -3;//密码过短
     }
-    FILE* test;
+    //FILE* test;
+    //test=fopen("test.txt","w");//测试文件
     //检查新密码是否合法(即不含有汉字和字符)
     if(!isPasswordValid(newPasswd)){
         return -1;//密码不合法
     }
     // 得到原行
     char buffer[1000];
-    fgets(buffer, 1000, stuFileptr);
-    test=fopen("test.txt","w");
-    fputs(buffer,test);
-    fprintf(test,"\n");
+    if(isStudent){
+        fgets(buffer, 1000, stuFileptr);
+    }
+    else{
+        fgets(buffer, 1000, workerFileptr);
+    }
+    //fputs(buffer,test);
+    //fprintf(test,"\n");//测试,原行
     //得到修改后的行
     int passwdIndex = 0;
     int passwdLength = 0;
@@ -125,9 +127,9 @@ int changePasswdTo(char* newPasswd){
     int newLenth = strlen(newPasswd);
     int moveSize = newLenth - passwdLength;
     int oldsize = strlen(buffer);
+    int newsize = strlen(buffer) + moveSize;
     if (moveSize < 0) {
       moveSize = 0 - moveSize;
-      int newsize = strlen(buffer) - moveSize;
       for (int i = passwdIndex + passwdLength - moveSize; i + moveSize < oldsize;
            i++) {
         buffer[i] = buffer[i + moveSize];
@@ -147,8 +149,18 @@ int changePasswdTo(char* newPasswd){
         buffer[i] = newPasswd[k];
       }
     }
-    fputs(buffer,test);
-    if(modify_file("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt",lineNumber,buffer)==-1){
+    for (int i=newsize;i<1000;i++){
+        buffer[i]=NULL;
+    }//删除多余字符
+    //fputs(buffer,test);//测试，修改后行
+    char* fileLocation;
+    if(isStudent){
+        fileLocation="D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";
+    }
+    else{
+        fileLocation="D:/c++/Qt/ScoreManagementSystem/adminInfo.txt";
+    }
+    if(modify_file(fileLocation,lineNumber,buffer)==-1){
             return -2;//文件打开失败
     }
     else{

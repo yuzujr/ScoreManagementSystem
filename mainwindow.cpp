@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     //管理员入口按钮
     myPushButton *adminEnterBtn = new myPushButton("://btn.png", "");
     adminEnterBtn->setParent(this);
-    adminEnterBtn->setText("管理员入口");
+    adminEnterBtn->setText("职工入口");
     adminEnterBtn->resize(QSize(200, 50));
     adminEnterBtn->move((this->width() - adminEnterBtn->width()) / 2, 400);
 
@@ -62,9 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
     //学生窗口
     connect(studentEnterBtn, &myPushButton::clicked, [ = ]() {
         StudentWindow *studentWindow = new StudentWindow(this);
-        QTimer::singleShot(300, this, [ = ]() {
+        QTimer::singleShot(200, this, [ = ]() {
             studentWindow->setGeometry(this->geometry());
-            studentWindow->show();
             this->hide();
         });
         connect(studentWindow, &StudentWindow::backToMenu, [ = ]() {
@@ -82,9 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
     //管理员窗口
     connect(adminEnterBtn, &myPushButton::clicked, [ = ]()  {
         AdminWindow *adminWindow = new AdminWindow(this);
-        QTimer::singleShot(300, this, [ = ]() {
+        QTimer::singleShot(200, this, [ = ]() {
             adminWindow->setGeometry(this->geometry());
-            adminWindow->show();
             this->hide();
         });
         connect(adminWindow, &AdminWindow::backToMenu, [ = ]() {
@@ -96,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent)
             exit(0);
         });//从管理员界面直接退出
     });
-    qDebug() << this->width() << this->height();
 }
 void MainWindow::paintEvent(QPaintEvent *event) {
     //创建主界面

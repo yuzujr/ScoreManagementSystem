@@ -5,12 +5,15 @@
 #include <string.h>
 
 extern FILE* stuFileptr;
+extern FILE* workerFileptr;
 extern int lineNumber;
+extern int isStudent;
+extern int isAdmin;
 
 int stuLogInCheck(char* account,char* passwd){
     FILE* pf;
     lineNumber=1;
-    char faccount[100],fpasswd[100],restOfLine[100];
+    char faccount[100],fpasswd[100],restOfLine[1000];
     //打开学生信息文件
     pf=fopen("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt","r");
     //检查是否打开成功
@@ -23,10 +26,11 @@ int stuLogInCheck(char* account,char* passwd){
             if(strcmp(faccount,account)==0&&strcmp(fpasswd,passwd)==0){
                 stuFileptr=pf;
                 moveToLineStart(stuFileptr);
+                isStudent=1;
                 return 1;//即登录成功
             }
             else{
-            fgets(restOfLine,100,pf);//去除此行剩余信息
+            fgets(restOfLine,1000,pf);//去除此行剩余信息
             lineNumber++;
             }
         }
@@ -38,6 +42,7 @@ int stuLogInCheck(char* account,char* passwd){
 
 int adminLogInCheck(char* account,char* passwd){
     FILE* pf;
+    lineNumber=1;
     char faccount[100],fpasswd[100],restOfLine[100];
     //打开学生信息文件
     pf=fopen("D:/c++/Qt/ScoreManagementSystem/adminInfo.txt","r");
@@ -47,10 +52,20 @@ int adminLogInCheck(char* account,char* passwd){
     }
     else{
         while(!feof(pf)){
+            char isadmin[10];
             fscanf(pf,"%s %s",faccount,fpasswd);
-            fgets(restOfLine,100,pf);//去除此行剩余信息
             if(strcmp(faccount,account)==0&&strcmp(fpasswd,passwd)==0){
+                fscanf(pf,"%s",isadmin);
+                if(isadmin[0]=='1') {isAdmin=1;}
+                else {isAdmin=0;}
+                workerFileptr=pf;
+                moveToLineStart(workerFileptr);
+                isStudent=0;
                 return 1;//即登录成功
+            }
+            else{
+            fgets(restOfLine,1000,pf);//去除此行剩余信息
+            lineNumber++;
             }
         }
         return -2;//即账号或密码错误

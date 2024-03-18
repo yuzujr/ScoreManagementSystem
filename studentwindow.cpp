@@ -14,23 +14,29 @@ StudentWindow::StudentWindow(QWidget *parent)
     this->setWindowTitle("学生界面");
     //登录窗口
     LogInWidget *logIn = new LogInWidget();
-    this->setCentralWidget(logIn);
+    logIn->move(368, 102);
+    logIn->show();
     //关闭后销毁
     logIn->setAttribute(Qt::WA_DeleteOnClose);
     //取消登录
     connect(logIn, &LogInWidget::loginCanceled, [ = ]() {
-        QTimer::singleShot(200, this, [ = ]() {
-            this->hide();
-            emit this->backToMenu();
-        });
+        delete logIn;
+        this->hide();
+        emit this->backToMenu();
     });
     //登录成功
     connect(logIn, &LogInWidget::loginSucceed, [ = ]() {
         logIn->hide();
+        this->show();
         //登录后操作
         delete logIn;
-        //1.查看成绩,排名
-
+        //1.查看成绩,排名按钮
+        myPushButton *scoreInquireBtn = new myPushButton(":/btn.png");
+        scoreInquireBtn->setParent(this);
+        scoreInquireBtn->setText("查看成绩");
+        scoreInquireBtn->resize(200, 50);
+        scoreInquireBtn->move((this->width() - scoreInquireBtn->width()) / 2, 300);
+        scoreInquireBtn->show();
         //2.修改密码
         myPushButton *changePasswdBtn = new myPushButton(":/btn.png");
         changePasswdBtn->setParent(this);
@@ -38,10 +44,11 @@ StudentWindow::StudentWindow(QWidget *parent)
         changePasswdBtn->resize(200, 50);
         changePasswdBtn->move((this->width() - changePasswdBtn->width()) / 2, 400);
         connect(changePasswdBtn, &myPushButton::clicked, [ = ]() {
-            changePasswdDialog *cpd = new changePasswdDialog(this);
-            cpd->setModal(1);//设为模态对话框
-            this->setCentralWidget(cpd);
-
+            QTimer::singleShot(100, [ = ]() {
+                changePasswdDialog *cpd = new changePasswdDialog(this);
+                cpd->setModal(1);//设为模态对话框
+                this->setCentralWidget(cpd);
+            });
         });
         changePasswdBtn->show();
         //3.退出登录
@@ -55,6 +62,28 @@ StudentWindow::StudentWindow(QWidget *parent)
             this->parentWidget()->show();
         });
         exitBtn->show();
+        //查看成绩
+        /*返回按钮*/
+        myPushButton *backBtn = new myPushButton(":/btn.png");
+        backBtn->setParent(this);
+        backBtn->setText("返回菜单");
+        backBtn->resize(200, 50);
+        backBtn->move(this->width() - backBtn->width(), this->height() - backBtn->height());
+        connect(scoreInquireBtn, &myPushButton::clicked, [ = ]() {
+            QTimer::singleShot(100, [ = ]() {
+                changePasswdBtn->hide();
+                scoreInquireBtn->hide();
+                exitBtn->hide();
+                backBtn->show();
+            });
+        });
+        connect(backBtn, &myPushButton::clicked, [ = ]() {
+            changePasswdBtn->show();
+            scoreInquireBtn->show();
+            exitBtn->show();
+            backBtn->hide();
+            //隐藏上面显示的信息
+        });
     });
 }
 

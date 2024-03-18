@@ -4,7 +4,9 @@
 #include "dataProcess.c"
 
 extern FILE *stuFileptr;
+extern FILE *workerFileptr;
 extern int lineNumber;
+extern int isStudent;
 
 
 changePasswdDialog::changePasswdDialog(QWidget *parent) :
@@ -12,8 +14,13 @@ changePasswdDialog::changePasswdDialog(QWidget *parent) :
     ui(new Ui::changePasswdDialog) {
     ui->setupUi(this);
     char logInNum[100], logInPasswd[100];
-    fscanf(stuFileptr, "%s %s", logInNum, logInPasswd);
-    moveToLineStart(stuFileptr);//获取信息后归位
+    if (isStudent) {
+        fscanf(stuFileptr, "%s %s", logInNum, logInPasswd);
+        moveToLineStart(stuFileptr);//获取信息后归位
+    } else {
+        fscanf(workerFileptr, "%s %s", logInNum, logInPasswd);
+        moveToLineStart(workerFileptr);
+    }
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, [ = ]() {
         if (ui->lineEdit->text().isEmpty() || ui->lineEdit_2->text().isEmpty()) {
             QMessageBox::warning(this, "警告", "内容不得为空！");

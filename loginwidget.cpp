@@ -11,7 +11,8 @@ LogInWidget::LogInWidget(QWidget *parent) :
     ui(new Ui::LogInWidget) {
     ui->setupUi(this);
     this->move(35, 60);
-
+    ui->lineEdit->setInputMethodHints(Qt::ImhLatinOnly);
+    ui->lineEdit_2->setInputMethodHints(Qt::ImhLatinOnly);
     //确认登录
     connect(ui->pushButton, &myPushButton::clicked, [ = ]() {
         QTimer::singleShot(300, this, [ = ]() {
@@ -22,7 +23,6 @@ LogInWidget::LogInWidget(QWidget *parent) :
                 if (ui->label_3->text() == QString("学 生 登 录")) {
                     res = stuLogInCheck(ui->lineEdit->text().toUtf8().data(), ui->lineEdit_2->text().toUtf8().data());
                     if (checkResult(res)) {//登录成功
-                        qDebug() << lineNumber;
                         emit loginSucceed();
                     }
                 } else {
@@ -39,11 +39,9 @@ LogInWidget::LogInWidget(QWidget *parent) :
 
     //取消登录，返回主界面
     connect(ui->pushButton_2, &myPushButton::released, [ = ]() {
-        QTimer::singleShot(300, this, [ = ]() {
-            ui->lineEdit->clear();
-            ui->lineEdit_2->clear();//清空输入框
-            emit loginCanceled();
-        });
+        ui->lineEdit->clear();
+        ui->lineEdit_2->clear();//清空输入框
+        emit loginCanceled();
     });
 }
 

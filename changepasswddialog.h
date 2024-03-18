@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QMessageBox>
+#include <string.h>
 
 namespace Ui {
     class changePasswdDialog;
@@ -12,11 +13,11 @@ namespace Ui {
 class changePasswdDialog : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     explicit changePasswdDialog(QWidget *parent = nullptr);
     ~changePasswdDialog();
 
-private:
+  private:
     Ui::changePasswdDialog *ui;
 };
 

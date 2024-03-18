@@ -22,7 +22,6 @@ class LogInWidget : public QWidget {
   signals:
     loginCanceled();
     loginSucceed();
-    loginFinished();
 };
 
 #endif // LOGINWIDGET_H
