@@ -1,13 +1,10 @@
-#define _CRT_SECURE_NO_WARNINGS
+#pragma once
 #include"student-grademanager.h"
 #include"student.h"
 
+extern Student *find_result[100];
 extern char allCourse[100][100];
 extern float credit[100];
-
-typedef struct Student Student;
-
-extern  Student* find_result[100];
 
 void init_find_result()
 {
@@ -325,7 +322,6 @@ void save_data(stu_list* head)
         for (int i = 0; i < p->m_stu.stu_course_num; i++)
         {
             fprintf(fp, " %lf %lf", p->m_stu.stu_course_grade[i][0], p->m_stu.stu_course_grade[i][1]);
-
         }
 
         //获奖项目

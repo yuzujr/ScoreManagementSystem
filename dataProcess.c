@@ -45,7 +45,6 @@ bool isPasswordValid(const char *password) {
     return true;
 }
 
-// 修改文件中的某一行
 int modify_file(const char* filename,const int linenumber,const char *new_content) {
     FILE *file = fopen(filename, "r");
         if (file == NULL) {
@@ -89,10 +88,13 @@ int modify_file(const char* filename,const int linenumber,const char *new_conten
         return 0;
 }
 
-//修改密码
+
 int changePasswdTo(char* newPasswd){
     if(strlen(newPasswd) < 8){
         return -3;//密码过短
+    }
+    if(strlen(newPasswd)>20){
+        return -4;//密码过长
     }
     //FILE* test;
     //test=fopen("test.txt","w");//测试文件
@@ -155,10 +157,10 @@ int changePasswdTo(char* newPasswd){
     //fputs(buffer,test);//测试，修改后行
     char* fileLocation;
     if(isStudent){
-        fileLocation="D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";
+        fileLocation=STU_FILE;
     }
     else{
-        fileLocation="D:/c++/Qt/ScoreManagementSystem/adminInfo.txt";
+        fileLocation=ADMIN_FILE;
     }
     if(modify_file(fileLocation,lineNumber,buffer)==-1){
             return -2;//文件打开失败
@@ -168,3 +170,41 @@ int changePasswdTo(char* newPasswd){
     }
 }
 
+Student* loadSingleStudent(){
+    Student* student=(Student*)malloc(sizeof(Student));
+    fscanf(stuFileptr, "%s %s %s %s %s", student->stu_number, student->stu_password, student->stu_name, student->stu_college, student->stu_major);
+    fscanf(stuFileptr, "%d %lf %d %d %d", &student->stu_classnum,&student->stu_grade_point, &student->stu_course_num, &student->stu_award_num,&student->stu_paper_num);
+    //课程及成绩
+    for (int i = 0; i < student->stu_course_num; i++)
+    {
+        fscanf(stuFileptr, "%lf %lf", &student->stu_course_grade[i][0], &student->stu_course_grade[i][1]);
+    }
+
+    //获奖项目
+    for (int i = 0; i < student->stu_award_num; i++)
+    {
+        fscanf(stuFileptr,"%s %s %d", student->stu_award[i].award_name, student->stu_award[i].award_hosted_by, &student->stu_award[i].award_winner_num);
+
+        for (int j = 0; j < student->stu_award[i].award_winner_num; j++)
+        {
+            fscanf(stuFileptr, "%s", student->stu_award[i].award_allwinner[j]);
+        }
+
+        fscanf(stuFileptr, "%lf %c %s", &student->stu_award[i].is_extra_credit, &student->stu_award[i].competition_level, student->stu_award[i].award_time);
+    }
+
+    //论文
+    for (int i = 0; i < student->stu_paper_num; i++)
+    {
+        fscanf(stuFileptr, "%s %d",student->stu_paper[i].paper_name,&student->stu_paper[i].writer_num);
+
+        for (int j = 0; j < student->stu_paper[i].writer_num; j++)
+        {
+            fscanf(stuFileptr, "%s", student->stu_paper[i].paper_allwriter[j]);
+        }
+
+        fscanf(stuFileptr, "%s %s %lf", student->stu_paper[i].paper_periodicalname, student->stu_paper[i].paper_time, &student->stu_paper[i].paper_extra_credit);
+    }
+    moveToLineStart(stuFileptr);
+    return student;
+}

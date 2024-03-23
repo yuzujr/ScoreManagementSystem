@@ -3,6 +3,9 @@
 #include "loginwidget.h"
 #include "mypushbutton.h"
 #include "changepasswddialog.h"
+#include "scoretable.h"
+#include "student.h"
+#include "student-grademanager.h"
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
@@ -12,19 +15,21 @@ extern int lineNumber;
 
 AdminWindow::AdminWindow(QWidget *parent)
     : QMainWindow{parent} {
+    //加载背景图
+    this->backgroundPixmap.load("://background.jpg");
     //设置窗口图标
     this->setWindowIcon(QIcon("://JLUicon.png"));
     //设置窗口标题
     this->setWindowTitle("职工界面");
-    LogInWidget *logIn = new LogInWidget();
-    logIn->move(368, 102);
-    logIn->show();
-    //关闭后销毁
-    logIn->setAttribute(Qt::WA_DeleteOnClose);
+    //窗口大小
+    this->setFixedSize(800, 600);
+    //登录窗口
+    LogInWidget *logIn = new LogInWidget(this);
+    this->setCentralWidget(logIn);
     //取消登录
     connect(logIn, &LogInWidget::loginCanceled, [ = ]() {
-        delete logIn;
         this->hide();
+        delete logIn;
         emit this->backToMenu();
     });
     //调整登录框内容
@@ -69,9 +74,7 @@ AdminWindow::AdminWindow(QWidget *parent)
 void AdminWindow::paintEvent(QPaintEvent *event) {
     //创建主界面
     QPainter painter(this);
-    QPixmap pix;
-    pix.load("://background.jpg");
-    painter.drawPixmap(0, 0, this->width() * 1.2, this->height(), pix);
+    painter.drawPixmap(0, 0, this->width() * 1.2, this->height(), this->backgroundPixmap);
 }
 
 void AdminWindow::closeEvent(QCloseEvent *event) {

@@ -2,6 +2,8 @@
 #define LOGINWIDGET_H
 
 #include <QWidget>
+#include <QPixmap>
+#include <QKeyEvent>
 
 namespace Ui {
     class LogInWidget;
@@ -17,10 +19,15 @@ class LogInWidget : public QWidget {
     bool checkResult(int);
     ~LogInWidget();
 
+  protected:
+    void keyPressEvent(QKeyEvent *event);
+
   private:
     Ui::LogInWidget *ui;
+
   signals:
     loginCanceled();
+    loginCommitted();
     loginSucceed();
 };
 

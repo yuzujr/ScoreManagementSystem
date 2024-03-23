@@ -9,12 +9,12 @@
 #include <QPainter>
 #include <QTimer>
 
-//TODO:内存优化，多线程，加密，测试入口，学生，管理员，账密文件，成绩文件
-//TODOOOOO:把按钮动画设为默认
+//TODO:加密
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)//界面大小：800*600
     : QMainWindow(parent)
     , ui(new Ui::MainWindow) {
+    this->setWindowFlags(windowFlags() & ~ Qt::WindowMaximizeButtonHint);
     ui->setupUi(this);
     //设置界面标题
     QLabel *title = new QLabel;
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     font.setPointSize(30);
     title->setFont(font);
     title->setText(QString("吉林大学成绩管理系统"));
-    title->setGeometry(QRect(205, 150, 500, 100)); //设置位置和大小
+    title->setGeometry(QRect(205, 100, 500, 100)); //设置位置和大小
 
     //按钮字体
     font.setFamily("华文中宋");
@@ -59,13 +59,14 @@ MainWindow::MainWindow(QWidget *parent)
         exit(0);
     });
 
+    QWidget::setTabOrder(studentEnterBtn, adminEnterBtn);
+    QWidget::setTabOrder(adminEnterBtn, exitBtn);
     //学生窗口
     connect(studentEnterBtn, &myPushButton::clicked, [ = ]() {
         StudentWindow *studentWindow = new StudentWindow(this);
-        QTimer::singleShot(200, this, [ = ]() {
-            studentWindow->setGeometry(this->geometry());
-            this->hide();
-        });
+        studentWindow->setGeometry(this->geometry());
+        studentWindow->show();
+        this->hide();
         connect(studentWindow, &StudentWindow::backToMenu, [ = ]() {
             this->setGeometry(studentWindow->geometry());
             delete studentWindow;
@@ -76,15 +77,12 @@ MainWindow::MainWindow(QWidget *parent)
         });//从学生界面直接退出
     });
 
-
-
     //管理员窗口
     connect(adminEnterBtn, &myPushButton::clicked, [ = ]()  {
         AdminWindow *adminWindow = new AdminWindow(this);
-        QTimer::singleShot(200, this, [ = ]() {
-            adminWindow->setGeometry(this->geometry());
-            this->hide();
-        });
+        adminWindow->setGeometry(this->geometry());
+        adminWindow->show();
+        this->hide();
         connect(adminWindow, &AdminWindow::backToMenu, [ = ]() {
             this->setGeometry(adminWindow->geometry());
             delete adminWindow;

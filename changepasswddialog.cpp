@@ -5,9 +5,10 @@
 
 extern FILE *stuFileptr;
 extern FILE *workerFileptr;
-extern int lineNumber;
 extern int isStudent;
-
+extern int lineNumber;
+extern char *STU_FILE;
+extern char *ADMIN_FILE;
 
 changePasswdDialog::changePasswdDialog(QWidget *parent) :
     QDialog(parent),
@@ -40,7 +41,9 @@ changePasswdDialog::changePasswdDialog(QWidget *parent) :
             } else if (ret == -2) {
                 QMessageBox::information(this, "提示", "文件修改失败！");
             } else if (ret == -3) {
-                QMessageBox::information(this, "提示", "密码过短，不得少于8个字符！");
+                QMessageBox::information(this, "提示", "密码过短，不得少于8位！");
+            } else if (ret == -4) {
+                QMessageBox::information(this, "提示", "密码过长，不得多于20位！");
             }
         }//修改密码
     });

@@ -2,6 +2,8 @@
 #define STUDENTWINDOW_H
 
 #include <QMainWindow>
+#include "student.h"
+#include "scoretable.h"
 
 class StudentWindow : public QMainWindow {
     Q_OBJECT
@@ -10,6 +12,8 @@ class StudentWindow : public QMainWindow {
     void paintEvent(QPaintEvent *event);
     void closeEvent(QCloseEvent *event);
     ~StudentWindow();
+  private:
+    QPixmap backgroundPixmap;
   signals:
     backToMenu();
     closed();

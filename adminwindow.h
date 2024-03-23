@@ -5,12 +5,14 @@
 
 class AdminWindow : public QMainWindow {
     Q_OBJECT
-public:
+  public:
     explicit AdminWindow(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
     void closeEvent(QCloseEvent *event);
     ~AdminWindow();
-signals:
+  private:
+    QPixmap backgroundPixmap;
+  signals:
     backToMenu();
     closed();
 };

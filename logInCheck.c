@@ -9,13 +9,15 @@ extern FILE* workerFileptr;
 extern int lineNumber;
 extern int isStudent;
 extern int isAdmin;
+extern char* STU_FILE;
+extern char* ADMIN_FILE;
 
 int stuLogInCheck(char* account,char* passwd){
     FILE* pf;
     lineNumber=1;
-    char faccount[100],fpasswd[100],restOfLine[1000];
+    char faccount[100],fpasswd[100],restOfLine[10000];
     //打开学生信息文件
-    pf=fopen("D:/c++/Qt/ScoreManagementSystem/studentInfo.txt","r");
+    pf=fopen(STU_FILE,"r");
     //检查是否打开成功
     if(pf==NULL){
         return -1;//即失败，将在调用处弹出警告
@@ -44,8 +46,8 @@ int adminLogInCheck(char* account,char* passwd){
     FILE* pf;
     lineNumber=1;
     char faccount[100],fpasswd[100],restOfLine[100];
-    //打开学生信息文件
-    pf=fopen("D:/c++/Qt/ScoreManagementSystem/adminInfo.txt","r");
+    //打开职工信息文件
+    pf=fopen(ADMIN_FILE,"r");
     //检查是否打开成功
     if(pf==NULL){
         return -1;//即失败，将在调用处弹出警告

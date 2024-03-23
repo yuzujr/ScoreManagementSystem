@@ -17,6 +17,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mypushbutton.cpp \
+    scoretable.cpp \
     student-grademanager.c \
     studentwindow.cpp
 
@@ -29,6 +30,7 @@ HEADERS += \
     loginwidget.h \
     mainwindow.h \
     mypushbutton.h \
+    scoretable.h \
     student-grademanager.h \
     student.h \
     studentwindow.h
@@ -36,7 +38,8 @@ HEADERS += \
 FORMS += \
     changepasswddialog.ui \
     loginwidget.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    scoretable.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

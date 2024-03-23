@@ -3,33 +3,42 @@
 #include "mypushbutton.h"
 #include "loginwidget.h"
 #include "changepasswddialog.h"
+#include "student-grademanager.h"
+#include "dataProcess.h"
 #include <QTimer>
 #include <QMessageBox>
 
+extern Student *student;
+
 StudentWindow::StudentWindow(QWidget *parent)
     : QMainWindow(parent) {
+    //加载背景图
+    this->backgroundPixmap.load("://background.jpg");
     //设置窗口图标
     this->setWindowIcon(QIcon("://JLUicon.png"));
     //设置窗口标题
     this->setWindowTitle("学生界面");
+    //窗口大小
+    this->setFixedSize(800, 600);
     //登录窗口
-    LogInWidget *logIn = new LogInWidget();
-    logIn->move(368, 102);
-    logIn->show();
-    //关闭后销毁
-    logIn->setAttribute(Qt::WA_DeleteOnClose);
+    LogInWidget *logIn = new LogInWidget(this);
+    this->setCentralWidget(logIn);
+
     //取消登录
     connect(logIn, &LogInWidget::loginCanceled, [ = ]() {
-        delete logIn;
         this->hide();
+        delete logIn;
         emit this->backToMenu();
     });
     //登录成功
     connect(logIn, &LogInWidget::loginSucceed, [ = ]() {
         logIn->hide();
-        this->show();
-        //登录后操作
         delete logIn;
+        //登录后操作
+        //0.学生初始化
+        student = loadSingleStudent();
+        ScoreTable *table = new ScoreTable();
+        table->printTable(student, 1);
         //1.查看成绩,排名按钮
         myPushButton *scoreInquireBtn = new myPushButton(":/btn.png");
         scoreInquireBtn->setParent(this);
@@ -70,18 +79,19 @@ StudentWindow::StudentWindow(QWidget *parent)
         backBtn->resize(200, 50);
         backBtn->move(this->width() - backBtn->width(), this->height() - backBtn->height());
         connect(scoreInquireBtn, &myPushButton::clicked, [ = ]() {
-            QTimer::singleShot(100, [ = ]() {
-                changePasswdBtn->hide();
-                scoreInquireBtn->hide();
-                exitBtn->hide();
-                backBtn->show();
-            });
+            changePasswdBtn->hide();
+            scoreInquireBtn->hide();
+            exitBtn->hide();
+            backBtn->show();
+            this->setCentralWidget(table);
+            table->show();
         });
         connect(backBtn, &myPushButton::clicked, [ = ]() {
             changePasswdBtn->show();
             scoreInquireBtn->show();
             exitBtn->show();
             backBtn->hide();
+            table->hide();
             //隐藏上面显示的信息
         });
     });
@@ -90,9 +100,7 @@ StudentWindow::StudentWindow(QWidget *parent)
 void StudentWindow::paintEvent(QPaintEvent *event) {
     //创建主界面
     QPainter painter(this);
-    QPixmap pix;
-    pix.load("://background.jpg");
-    painter.drawPixmap(0, 0, this->width() * 1.2, this->height(), pix);
+    painter.drawPixmap(0, 0, this->width() * 1.2, this->height(), this->backgroundPixmap);
 }
 
 void StudentWindow::closeEvent(QCloseEvent *event) {

@@ -100,7 +100,7 @@ void myPushButton::mouseReleaseEvent(QMouseEvent *e) {
         this->setIcon(pixmap);
         this->setIconSize(QSize(pixmap.width(), pixmap.height()));
     }
-    QTimer::singleShot(200, this, [ = ]() {
+    QTimer::singleShot(150, this, [ = ]() {
         this->zoomUp();
     });
     return QPushButton::mouseReleaseEvent(e);

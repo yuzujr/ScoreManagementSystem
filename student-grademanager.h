@@ -15,8 +15,6 @@ struct stu_list {
 typedef struct stu_list stu_list;
 typedef struct Student Student;
 
-Student *find_result[100];
-
 void init_find_result();//清空查找结果
 
 stu_list *bulid();//创建空链表
