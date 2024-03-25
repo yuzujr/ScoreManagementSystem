@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)//界面大小：800*600
     , ui(new Ui::MainWindow) {
     this->setWindowFlags(windowFlags() & ~ Qt::WindowMaximizeButtonHint);
     ui->setupUi(this);
+    // 设置窗口为置顶
+    this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
     //设置界面标题
     QLabel *title = new QLabel;
     title->setParent(this);

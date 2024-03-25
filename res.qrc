@@ -6,5 +6,11 @@
         <file>adminInfo.txt</file>
         <file>studentInfo.txt</file>
         <file>uac.manifest</file>
+        <file>right10.png</file>
+        <file>right1.png</file>
+        <file>left1.png</file>
+        <file>left10.png</file>
+        <file>image.png</file>
+        <file>topMargin.png</file>
     </qresource>
 </RCC>

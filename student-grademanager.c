@@ -262,12 +262,10 @@ stu_list* load_data(stu_list* head)
             p = (stu_list*)malloc(sizeof(stu_list));
             fscanf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
             fscanf(fp, "%d %lf %d %d %d", &p->m_stu.stu_classnum,&p->m_stu.stu_grade_point, &p->m_stu.stu_course_num, &p->m_stu.stu_award_num,&p->m_stu.stu_paper_num);
-            /*printf("%s %s %s %s %s %d %.1lf %d %d\n", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num);*/
-
             //课程及成绩
             for (int i = 0; i < p->m_stu.stu_course_num; i++)
             {
-                fscanf(fp, "%lf %lf", &p->m_stu.stu_course_grade[i][0], &p->m_stu.stu_course_grade[i][1]);
+                fscanf(fp, "%lf %lf %lf", &p->m_stu.stu_course_grade[i][0], &p->m_stu.stu_course_grade[i][1],&p->m_stu.stu_course_grade[i][2]);
 
             }
 
@@ -280,7 +278,6 @@ stu_list* load_data(stu_list* head)
                 {
                     fscanf(fp, "%s", p->m_stu.stu_award[i].award_allwinner[j]);
                 }
-
                 fscanf(fp, "%lf %c %s", &p->m_stu.stu_award[i].is_extra_credit, &p->m_stu.stu_award[i].competition_level, p->m_stu.stu_award[i].award_time);
             }
 
@@ -296,7 +293,6 @@ stu_list* load_data(stu_list* head)
 
                 fscanf(fp, "%s %s %lf", p->m_stu.stu_paper[i].paper_periodicalname, p->m_stu.stu_paper[i].paper_time, &p->m_stu.stu_paper[i].paper_extra_credit);
             }
-
 
             fscanf(fp, "\n");
             p->prev = tail;

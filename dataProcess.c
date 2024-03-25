@@ -177,7 +177,7 @@ Student* loadSingleStudent(){
     //课程及成绩
     for (int i = 0; i < student->stu_course_num; i++)
     {
-        fscanf(stuFileptr, "%lf %lf", &student->stu_course_grade[i][0], &student->stu_course_grade[i][1]);
+        fscanf(stuFileptr, "%lf %lf %lf", &student->stu_course_grade[i][0], &student->stu_course_grade[i][1],&student->stu_course_grade[i][2]);
     }
 
     //获奖项目

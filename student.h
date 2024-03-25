@@ -55,7 +55,7 @@ typedef struct Student {
 
     int stu_paper_num;//论文数量
 
-    double stu_course_grade[100][2];//课程编号及成绩
+    double stu_course_grade[100][3];//课程编号及成绩
 
     int stu_course_num;//课程数量
 
