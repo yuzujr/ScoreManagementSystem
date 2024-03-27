@@ -5,6 +5,7 @@
 #include "changepasswddialog.h"
 #include "student-grademanager.h"
 #include "dataProcess.h"
+#include "projecttable.h"
 #include <QTimer>
 #include <QMessageBox>
 #include <QLabel>
@@ -19,7 +20,9 @@
 extern Student *student;
 
 //为了延长该变量的生命周期，将它设置为全局变量
-int currentPage = 1;//当前页数
+int currentPage = 1;//成绩当前页数
+int paperCurPage = 1;
+int awardCurPage = 1;
 
 int countDigits(int n) {//计算十进制整数位数
     if (n == 0) {
@@ -70,6 +73,7 @@ StudentWindow::StudentWindow(QWidget *parent)
         //0.学生初始化
         student = loadSingleStudent();
         ScoreTable *table = new ScoreTable();
+        ProjectTable *ptable = new ProjectTable(nullptr, student);
         table->printTable(student, 1);
 
         //1.查看成绩,排名按钮
@@ -77,10 +81,18 @@ StudentWindow::StudentWindow(QWidget *parent)
         scoreInquireBtn->setParent(this);
         scoreInquireBtn->setText("查看成绩");
         scoreInquireBtn->resize(200, 50);
-        scoreInquireBtn->move((this->width() - scoreInquireBtn->width()) / 2, 300);
+        scoreInquireBtn->move((this->width() - scoreInquireBtn->width()) / 2, 200);
         scoreInquireBtn->show();
 
-        //2.修改密码
+        //2.综合类项目入口按钮
+        myPushButton *projectBtn = new myPushButton(":/btn.png");
+        projectBtn->setParent(this);
+        projectBtn->setText("综合类项目");
+        projectBtn->resize(200, 50);
+        projectBtn->move((this->width() - projectBtn->width()) / 2, 300);
+        projectBtn->show();
+
+        //3.修改密码
         myPushButton *changePasswdBtn = new myPushButton(":/btn.png");
         changePasswdBtn->setParent(this);
         changePasswdBtn->setText("修改密码");
@@ -95,7 +107,7 @@ StudentWindow::StudentWindow(QWidget *parent)
         });
         changePasswdBtn->show();
 
-        //3.退出登录
+        //4.退出登录
         myPushButton *exitBtn = new myPushButton(":/btn.png");
         exitBtn->setParent(this);
         exitBtn->setText("退出登录");
@@ -268,13 +280,26 @@ StudentWindow::StudentWindow(QWidget *parent)
         topMarginLabel->move(0, 0);
         topMarginLabel->resize(800, 50);
 
-        //查看信息，显示界面
+        //查看成绩，界面操作
         connect(scoreInquireBtn, &myPushButton::clicked, [ = ]() {
-            changePasswdBtn->hide();
-            scoreInquireBtn->hide();
-            exitBtn->hide();
-            imageLabel->hide();
-            infoLabel->hide();
+            if (changePasswdBtn->isVisible()) {
+                changePasswdBtn->hide();
+            }
+            if (scoreInquireBtn->isVisible()) {
+                scoreInquireBtn->hide();
+            }
+            if (projectBtn->isVisible()) {
+                projectBtn->hide();
+            }
+            if (exitBtn->isVisible()) {
+                exitBtn->hide();
+            }
+            if (imageLabel->isVisible()) {
+                imageLabel->hide();
+            }
+            if (infoLabel->isVisible()) {
+                infoLabel->hide();
+            }
             left10Btn->show();
             left1Btn->show();
             right1Btn->show();
@@ -287,6 +312,112 @@ StudentWindow::StudentWindow(QWidget *parent)
             topMarginLabel->show();
         });
 
+        /*左翻1页按钮*/
+        myPushButton *left1Btn2 = new myPushButton(":/left1.png");
+        left1Btn2->setParent(this);
+        left1Btn2->move(60, 550);
+
+        /*右翻1页按钮*/
+        myPushButton *right1Btn2 = new myPushButton(":/right1.png");
+        right1Btn2->setParent(this);
+        right1Btn2->move(100, 550);
+
+        /*返回按钮*/
+        myPushButton *backBtn2 = new myPushButton(":/btn.png");
+        backBtn2->setParent(this);
+        backBtn2->setText("返回菜单");
+        backBtn2->resize(200, 50);
+        backBtn2->move(this->width() - backBtn2->width(), this->height() - backBtn2->height());
+
+        //QLabel
+        QLabel *pageLabel = new QLabel(this);
+
+        //综合类项目，界面操作
+        connect(projectBtn, &QPushButton::clicked, [ = ] {
+            if (changePasswdBtn->isVisible())
+                changePasswdBtn->hide();
+            if (scoreInquireBtn->isVisible())
+                scoreInquireBtn->hide();
+            if (projectBtn->isVisible())
+                projectBtn->hide();
+            if (exitBtn->isVisible())
+                exitBtn->hide();
+            if (imageLabel->isVisible())
+                imageLabel->hide();
+            if (infoLabel->isVisible())
+                infoLabel->hide();
+            backBtn2->show();
+            this->setCentralWidget(ptable);
+            ptable->show();
+        });
+        int awardNum = student->stu_award_num;
+        int paperNum = student->stu_paper_num;
+        connect(ptable, &ProjectTable::awardClicked, [ = ]() {
+            awardCurPage = 1;
+            left1Btn2->show();
+            right1Btn2->show();
+            QString pageString = "第" + QString::number(awardCurPage) + "页" + "   共" + QString::number(awardNum) + "页";
+            pageLabel->setText(pageString);
+            pageLabel->setFont(font);
+            pageLabel->adjustSize();
+            pageLabel->move(190, 557);
+            pageLabel->show();
+            //先断开其他连接
+            disconnect(left1Btn2, &QPushButton::clicked, nullptr, nullptr);
+            disconnect(right1Btn2, &QPushButton::clicked, nullptr, nullptr);
+            connect(left1Btn2, &myPushButton::clicked, [ = ]() {
+                if (awardCurPage == 1); //不做任何处理
+                else {
+                    ptable->clearTable();
+                    ptable->printAward(student, awardCurPage - 1);
+                    awardCurPage -= 1;
+                    pageLabel->setText("第" + QString::number(awardCurPage) + "页" + "   共" + QString::number(awardNum) + "页");
+                }
+            });
+
+            connect(right1Btn2, &myPushButton::clicked, [ = ]() {
+                if (awardCurPage == awardNum); //不做任何处理
+                else {
+                    ptable->clearTable();
+                    ptable->printAward(student, awardCurPage + 1);
+                    awardCurPage += 1;
+                    pageLabel->setText("第" + QString::number(awardCurPage) + "页" + "   共" + QString::number(awardNum) + "页");
+                }
+            });
+        });
+        connect(ptable, &ProjectTable::paperClicked, [ = ]() {
+            paperCurPage = 1;
+            left1Btn2->show();
+            right1Btn2->show();
+            QString pageString = "第" + QString::number(paperCurPage) + "页" + "   共" + QString::number(paperNum) + "页";
+            pageLabel->setText(pageString);
+            pageLabel->setFont(font);
+            pageLabel->adjustSize();
+            pageLabel->move(190, 557);
+            pageLabel->show();
+            //先断开其他连接
+            disconnect(left1Btn2, &QPushButton::clicked, nullptr, nullptr);
+            disconnect(right1Btn2, &QPushButton::clicked, nullptr, nullptr);
+            connect(left1Btn2, &myPushButton::clicked, [ = ]() {
+                if (paperCurPage == 1); //不做任何处理
+                else {
+                    ptable->clearTable();
+                    ptable->printPaper(student, paperCurPage - 1);
+                    paperCurPage -= 1;
+                    pageLabel->setText("第" + QString::number(paperCurPage) + "页" + "   共" + QString::number(paperNum) + "页");
+                }
+            });
+
+            connect(right1Btn2, &myPushButton::clicked, [ =, &paperCurPage]() {
+                if (paperCurPage == paperNum); //不做任何处理
+                else {
+                    ptable->clearTable();
+                    ptable->printPaper(student, paperCurPage + 1);
+                    paperCurPage += 1;
+                    pageLabel->setText("第" + QString::number(paperCurPage) + "页" + "   共" + QString::number(paperNum) + "页");
+                }
+            });
+        });
         //返回学生界面
         connect(backBtn, &myPushButton::clicked, [ = ]() {
             changePasswdBtn->show();
@@ -294,6 +425,7 @@ StudentWindow::StudentWindow(QWidget *parent)
             exitBtn->show();
             imageLabel->show();
             infoLabel->show();
+            projectBtn->show();
             left10Btn->hide();
             left1Btn->hide();
             right1Btn->hide();
@@ -303,7 +435,21 @@ StudentWindow::StudentWindow(QWidget *parent)
             backBtn->hide();
             table->hide();
             topMarginLabel->hide();
-            //隐藏上面显示的信息
+        });
+        //素质项目返回学生界面
+        connect(backBtn2, &myPushButton::clicked, [ = ]() {
+            changePasswdBtn->show();
+            scoreInquireBtn->show();
+            exitBtn->show();
+            imageLabel->show();
+            infoLabel->show();
+            projectBtn->show();
+            ptable->hide();
+            right1Btn2->hide();
+            left1Btn2->hide();
+            pageLabel->hide();
+            backBtn2->hide();
+            ptable->clearTable();
         });
     });
 }

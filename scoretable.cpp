@@ -38,7 +38,6 @@ ScoreTable::ScoreTable(QWidget *parent) :
     // 设置表格的边框线
     this->ui->scoreTable->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: transparent; }");
     this->ui->scoreTable->verticalHeader()->setStyleSheet("QHeaderView::section { background-color: transparent; }");
-    this->ui->scoreTable->setCornerButtonEnabled(false);
 }
 
 // 清空表格内容

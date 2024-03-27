@@ -20,13 +20,13 @@ typedef struct Award { //获奖信息
 } Award;
 
 typedef struct Paper { //论文信息
-    char paper_name[100];//论文名称
+    char paper_name[1000];//论文名称
 
     int writer_num;//作者数量
 
     char paper_allwriter[100][100];//所有作者（如果有通讯作者放第一位并且加上@）
 
-    char paper_periodicalname[100];//期刊名称/会议名称+（卷/期/论文号/页码范围（Pxx~Pxx））
+    char paper_periodicalname[1000];//期刊名称/会议名称+（卷/期/论文号/页码范围（Pxx~Pxx））
 
     char paper_time[100];//发表时间
 

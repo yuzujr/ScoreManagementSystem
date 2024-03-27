@@ -17,6 +17,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mypushbutton.cpp \
+    projecttable.cpp \
     scoretable.cpp \
     student-grademanager.c \
     studentwindow.cpp
@@ -30,6 +31,7 @@ HEADERS += \
     loginwidget.h \
     mainwindow.h \
     mypushbutton.h \
+    projecttable.h \
     scoretable.h \
     student-grademanager.h \
     student.h \
@@ -39,6 +41,7 @@ FORMS += \
     changepasswddialog.ui \
     loginwidget.ui \
     mainwindow.ui \
+    projecttable.ui \
     scoretable.ui
 
 # Default rules for deployment.
