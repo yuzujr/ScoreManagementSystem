@@ -13,6 +13,11 @@
 extern int isAdmin;
 extern int lineNumber;
 
+//1.增加学生
+//2.查找学生
+//3.成绩总览(统计，按GPA、姓名首字母排名）(快速搜索ctrl+f）
+//......
+
 AdminWindow::AdminWindow(QWidget *parent)
     : QMainWindow{parent} {
     //加载背景图
