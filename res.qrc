@@ -12,5 +12,6 @@
         <file>left10.png</file>
         <file>image.png</file>
         <file>topMargin.png</file>
+        <file>None.png</file>
     </qresource>
 </RCC>

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTableWidgetItem>
+#include <QLabel>
 #include "student.h"
 
 namespace Ui {
@@ -18,9 +19,11 @@ class ScoreTable : public QWidget {
     void clearTable();
     void printTable(Student *stu, int page);
     ~ScoreTable();
-
+    QPixmap NonePixmap;
+    QLabel pixmapLabel;
   private:
     Ui::ScoreTable *ui;
+
 };
 
 #endif // SCORETABLE_H

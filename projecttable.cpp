@@ -40,6 +40,25 @@ void ProjectTable::clearTable() {
     }
 }
 void ProjectTable::printPaper(Student *stu, int page) {
+    if (stu->stu_paper_num == 0) {
+        this->ui->tableWidget->setRowCount(0);
+        this->ui->tableWidget->setColumnCount(0);
+        pixmapLabel.setParent(this->ui->tableWidget);
+        pixmapLabel.setPixmap(this->NonePixmap);
+        pixmapLabel.resize(this->NonePixmap.size());
+        pixmapLabel.move((this->width() - NonePixmap.width()) / 2, 100);
+        pixmapLabel.setStyleSheet("border: none;");
+        pixmapLabel.show();
+        QLabel *info = new QLabel("这里还什么都没有哦", this->ui->tableWidget);
+        info->move((this->width() - info->width()) / 2 - 33, 300);
+        info->setStyleSheet("border: none; font: 14pt 宋体;");
+        info->show();
+        connect(this, &ProjectTable::awardClicked, [ = ]() {
+            info->hide();
+            pixmapLabel.hide();
+        });
+        return;
+    }//论文为空
     QFont font("宋体", 12); // 设置字体为宋体，大小为12号
     ui->tableWidget->setColumnCount(1);
     ui->tableWidget->setRowCount(5);
@@ -56,7 +75,6 @@ void ProjectTable::printPaper(Student *stu, int page) {
         item->setFlags(item->flags() & ~Qt::ItemIsEditable); // 禁止编辑
         item->setFont(font);
         ui->tableWidget->setItem(row, 0, item);
-        //ui->tableWidget->item(row, 0)->setFlags(ui->tableWidget->item(row, 0)->flags() & ~Qt::ItemIsSelectable); // 禁止选中
     }
     //论文名称
     ui->tableWidget->item(0, 0)->setText(QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_name));
@@ -65,9 +83,15 @@ void ProjectTable::printPaper(Student *stu, int page) {
     for (int i = 0; i < stu->stu_paper[page - 1].writer_num; i++) {
         if (i == 0 && stu->stu_paper[page - 1].paper_allwriter[i][0] == '@') {
             allWriter += "通讯作者：";
+            char writer[100];
+            for (int i = 0; i + 1 < strlen(stu->stu_paper[page - 1].paper_allwriter[0]); i++) {
+                writer[i] = stu->stu_paper[page - 1].paper_allwriter[0][i + 1];
+            }
+            allWriter += QString::fromLocal8Bit(writer) + ";  ";
+        } else {
+            allWriter += QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_allwriter[i]);
+            allWriter += "  ";
         }
-        allWriter += QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_allwriter[i]);
-        allWriter += "  ";
     }
     ui->tableWidget->item(1, 0)->setText(allWriter);
     //期刊名称
@@ -78,6 +102,25 @@ void ProjectTable::printPaper(Student *stu, int page) {
     ui->tableWidget->item(4, 0)->setText(QString::number(stu->stu_paper[page - 1].paper_extra_credit));
 }
 void ProjectTable::printAward(Student *stu, int page) {
+    if (stu->stu_award_num == 0) {
+        this->ui->tableWidget->setRowCount(0);
+        this->ui->tableWidget->setColumnCount(0);
+        pixmapLabel.setParent(this->ui->tableWidget);
+        pixmapLabel.setPixmap(this->NonePixmap);
+        pixmapLabel.resize(this->NonePixmap.size());
+        pixmapLabel.move((this->width() - NonePixmap.width()) / 2, 100);
+        pixmapLabel.setStyleSheet("border: none;");
+        pixmapLabel.show();
+        QLabel *info = new QLabel("这里还什么都没有哦", this->ui->tableWidget);
+        info->move((this->width() - info->width()) / 2 - 33, 300);
+        info->setStyleSheet("border: none; font: 14pt 宋体;");
+        info->show();
+        connect(this, &ProjectTable::paperClicked, [ = ]() {
+            info->hide();
+            pixmapLabel.hide();
+        });
+        return;
+    }//奖项为空
     QFont font("宋体", 12); // 设置字体为宋体，大小为12号
     ui->tableWidget->setColumnCount(1);
     ui->tableWidget->setRowCount(5);

@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    addstudentdialog.cpp \
     adminwindow.cpp \
     changepasswddialog.cpp \
     dataProcess.c \
@@ -23,6 +24,7 @@ SOURCES += \
     studentwindow.cpp
 
 HEADERS += \
+    addstudentdialog.h \
     adminwindow.h \
     changepasswddialog.h \
     dataProcess.h \
@@ -38,6 +40,7 @@ HEADERS += \
     studentwindow.h
 
 FORMS += \
+    addstudentdialog.ui \
     changepasswddialog.ui \
     loginwidget.ui \
     mainwindow.ui \

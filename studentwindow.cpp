@@ -72,9 +72,10 @@ StudentWindow::StudentWindow(QWidget *parent)
 
         //0.学生初始化
         student = loadSingleStudent();
-        ScoreTable *table = new ScoreTable();
-        ProjectTable *ptable = new ProjectTable(nullptr, student);
-        table->printTable(student, 1);
+        ScoreTable *table = new ScoreTable(this);
+        ProjectTable *ptable = new ProjectTable(this, student);
+        table->NonePixmap.load(":/None.png");
+        ptable->NonePixmap.load(":/None.png");
 
         //1.查看成绩,排名按钮
         myPushButton *scoreInquireBtn = new myPushButton(":/btn.png");
@@ -308,6 +309,7 @@ StudentWindow::StudentWindow(QWidget *parent)
             pageNumberEdit->show();
             backBtn->show();
             this->setCentralWidget(table);
+            table->printTable(student, 1);
             table->show();
             topMarginLabel->show();
         });

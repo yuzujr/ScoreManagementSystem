@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QLabel>
 #include "student.h"
 
 namespace Ui {
@@ -27,10 +28,13 @@ class ProjectTable : public QWidget {
     }
     void pageTurning(Student *stu, int page);
     ~ProjectTable();
+    QPixmap NonePixmap;
+    QLabel pixmapLabel;
 
   private:
     Ui::ProjectTable *ui;
     bool m_isPaper;
+
   signals:
     paperClicked();
     awardClicked();
