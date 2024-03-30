@@ -6,6 +6,7 @@
 #include "student-grademanager.h"
 #include "dataProcess.h"
 #include "projecttable.h"
+#include "globalVar.h"
 #include <QTimer>
 #include <QMessageBox>
 #include <QLabel>
@@ -17,7 +18,7 @@
 #include <QPixmap>
 #include <cmath>
 
-extern Student *student;
+// extern Student *student;
 
 //为了延长该变量的生命周期，将它设置为全局变量
 int currentPage = 1;//成绩当前页数

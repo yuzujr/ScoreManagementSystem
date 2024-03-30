@@ -1,10 +1,6 @@
 #pragma once
 #include"student-grademanager.h"
-#include"student.h"
-
-extern Student *find_result[100];
-extern char allCourse[100][100];
-extern float credit[100];
+#include "globalVar.h"
 
 void init_find_result()
 {
@@ -14,7 +10,7 @@ void init_find_result()
 	return;
 }
 
-stu_list* bulid()
+stu_list* build()
 {
 	stu_list* head;
 	head = (stu_list*)malloc(sizeof(stu_list));
@@ -364,7 +360,7 @@ void printAll(stu_list* head)
 		printf("课程及其成绩：\n");
 		for (int i = 0; i < p->m_stu.stu_course_num; i++)
 		{
-			printf("课程%d：%s  成绩：%.1lf\n", i + 1, allCourse[(int)p->m_stu.stu_course_grade[i][0]], p->m_stu.stu_course_grade[i][1]);
+            printf("课程%d：%s  成绩：%.1lf\n", i + 1, allCourses[(int)p->m_stu.stu_course_grade[i][0]], p->m_stu.stu_course_grade[i][1]);
 		}
 		printf("获奖信息：\n");
 		for (int i = 0; i < p->m_stu.stu_award_num; i++)

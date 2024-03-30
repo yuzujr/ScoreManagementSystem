@@ -2,15 +2,16 @@
 #pragma once
 #include "logInCheck.h"
 #include "dataProcess.h"
+#include "globalVar.h"
 #include <string.h>
 
-extern FILE* stuFileptr;
-extern FILE* workerFileptr;
-extern int lineNumber;
-extern int isStudent;
-extern int isAdmin;
-extern char* STU_FILE;
-extern char* ADMIN_FILE;
+// extern FILE* stuFileptr;
+// extern FILE* workerFileptr;
+// extern int lineNumber;
+// extern int isStudent;
+// extern int isAdmin;
+// extern char* STU_FILE;
+// extern char* ADMIN_FILE;
 
 int stuLogInCheck(char* account,char* passwd){
     FILE* pf;

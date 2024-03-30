@@ -17,7 +17,7 @@ typedef struct Student Student;
 
 void init_find_result();//清空查找结果
 
-stu_list *bulid();//创建空链表
+stu_list *build();//创建空链表
 
 void insert_stu(stu_list *pos/*在此节点后插入*/, Student *stu); //增加学生
 
@@ -45,3 +45,5 @@ void delete_stu(stu_list *);//删除学生信息
 void printAll(stu_list *head);//打印所有学生信息
 
 stu_list *load_data(stu_list *); //加载文件数据
+
+void save_data(stu_list *head); //保存文件数据

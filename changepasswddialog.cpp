@@ -2,13 +2,14 @@
 #include "changepasswddialog.h"
 #include "ui_changepasswddialog.h"
 #include "dataProcess.c"
+#include "globalVar.h"
 
-extern FILE *stuFileptr;
-extern FILE *workerFileptr;
-extern int isStudent;
-extern int lineNumber;
-extern char *STU_FILE;
-extern char *ADMIN_FILE;
+// extern FILE *stuFileptr;
+// extern FILE *workerFileptr;
+// extern int isStudent;
+// extern int lineNumber;
+// extern char *STU_FILE;
+// extern char *ADMIN_FILE;
 
 changePasswdDialog::changePasswdDialog(QWidget *parent) :
     QDialog(parent),

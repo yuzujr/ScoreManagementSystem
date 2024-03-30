@@ -34,8 +34,6 @@ typedef struct Paper { //论文信息
 
 } Paper;
 
-
-
 typedef struct Student {
     char stu_number[100];//学号
 
@@ -47,11 +45,11 @@ typedef struct Student {
 
     char stu_major[100];//专业
 
-    Award stu_award[10];//获奖信息
+    Award stu_award[100];//获奖信息
 
     int stu_award_num;//获奖数量
 
-    Paper stu_paper[10];
+    Paper stu_paper[100];
 
     int stu_paper_num;//论文数量
 

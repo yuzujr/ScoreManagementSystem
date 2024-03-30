@@ -38,20 +38,21 @@
       <widget class="QLabel" name="label_3">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>77</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>77</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -109,7 +110,8 @@
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -166,7 +168,8 @@
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -217,7 +220,8 @@
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -268,7 +272,8 @@
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -312,14 +317,15 @@
       <widget class="QLabel" name="label_7">
        <property name="maximumSize">
         <size>
-         <width>70</width>
+         <width>85</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -343,35 +349,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>67</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="editCourseBtn">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>自定义</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -386,18 +363,19 @@
       <widget class="QLabel" name="label_9">
        <property name="maximumSize">
         <size>
-         <width>70</width>
+         <width>85</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>奖项：</string>
+        <string> 奖项：</string>
        </property>
       </widget>
      </item>
@@ -510,19 +488,19 @@ padding: 10px;</string>
       <widget class="QLabel" name="label_8">
        <property name="maximumSize">
         <size>
-         <width>70</width>
+         <width>85</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="font">
         <font>
          <family>宋体</family>
-         <pointsize>15</pointsize>
-         <bold>false</bold>
+         <pointsize>16</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>论文：</string>
+        <string> 论文：</string>
        </property>
       </widget>
      </item>

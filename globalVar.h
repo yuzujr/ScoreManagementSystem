@@ -1,36 +1,37 @@
 #pragma once
 #include <stdio.h>
 #include "student.h"
-//使用前请初始化
-FILE *stuFileptr;//登入学生的文件指针
-Student *student = NULL; //登入学生
-FILE *workerFileptr;//登入职工的文件指针
-int isStudent;//学生或职工
-int isAdmin;//教师或管理员
-int lineNumber;//学生在文件中的位置
-char *STU_FILE = "D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";//学生文件位置
-char *ADMIN_FILE = "D:/c++/Qt/ScoreManagementSystem/adminInfo.txt"; //教师文件位置
-Student *find_result[100];
-char allCourse[100][100] = {"666", "555", "444", "666", "666", "666", "666", "666", "666", "666", "666", "666"};
-float credit[100] = {
-    4.0, // 高等数学的绩点
-    3.5, // 线性代数的绩点
-    3.7, // 概率论与数理统计的绩点
-    3.2, // 大学物理的绩点
-    3.6, // 化学基础的绩点
-    3.8, // 生物学导论的绩点
-    3.4, // 地球科学的绩点
-    3.9,
-    2.5,
-    3.5,
-    4.0,
-};
 
-void varInit() {
-    stuFileptr = NULL;
-    workerFileptr = NULL;
-    student = NULL;
-    isStudent = NULL;
-    isAdmin = NULL;
-    lineNumber = NULL;
-}
+#define MAX_COLLEGE_COUNT 100//最多学院数量
+#define MAX_MAJOR_PER_COLLEGE 10//各学院最多专业数量
+#define MAX_NAME_LENGTH 100//学院、专业、课程名最大长度
+#define MAX_COURSES_PER_MAJOR 100//各专业最大课程数量
+
+//使用前请初始化
+extern FILE *stuFileptr;//登入学生的文件指针
+
+extern Student *student; //登入学生
+
+extern FILE *workerFileptr;//登入职工的文件指针
+
+extern int isStudent;//学生或职工
+
+extern int isAdmin;//教师或管理员
+
+extern int lineNumber;//学生在文件中的位置
+
+extern char *STU_FILE;//学生文件位置
+
+extern char *ADMIN_FILE; //教师文件位置
+
+extern Student *find_result[100];//查找结果
+
+extern const char allCourses[100][100];//所有课程
+
+extern float credits[100];//各课程绩点
+
+extern char colleges[MAX_COLLEGE_COUNT][MAX_NAME_LENGTH];//所有学院
+
+extern char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH];//各学院对应专业
+
+extern char majorCourses[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_COURSES_PER_MAJOR];//各专业对应课程

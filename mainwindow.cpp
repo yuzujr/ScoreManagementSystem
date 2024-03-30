@@ -9,8 +9,6 @@
 #include <QPainter>
 #include <QTimer>
 
-//TODO:加密
-
 MainWindow::MainWindow(QWidget *parent)//界面大小：800*600
     : QMainWindow(parent)
     , ui(new Ui::MainWindow) {

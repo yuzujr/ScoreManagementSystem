@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QPixmap>
 #include <QPainter>
+#include "student.h"
 
 namespace Ui {
     class AddStudentDialog;
@@ -15,6 +16,7 @@ class AddStudentDialog : public QDialog {
   public:
     explicit AddStudentDialog(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
+    Student newStudent;
     ~AddStudentDialog();
 
   private:

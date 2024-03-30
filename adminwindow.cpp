@@ -5,15 +5,16 @@
 #include "changepasswddialog.h"
 #include "scoretable.h"
 #include "student.h"
-#include "student-grademanager.h"
+#include "student-grademanager.c"
 #include "addstudentdialog.h"
+#include "globalVar.h"
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
 
-extern int isAdmin;
-extern int lineNumber;
-
+//TODO：1.修改一下日期的样式，完成奖项、论文编辑操作，完成新建学生操作
+//2.查找->修改（基于新建学生窗口）、删除（验证密码）
+//3.
 AdminWindow::AdminWindow(QWidget *parent)
     : QMainWindow{parent} {
     //加载背景图
@@ -42,6 +43,9 @@ AdminWindow::AdminWindow(QWidget *parent)
         this->show();
         delete logIn;
         //登录后操作
+        //0.初始化链表
+        //stu_list *listHead = build();
+        init_find_result();
         //1.增加学生
         myPushButton *addStudentBtn = new myPushButton(":/btn.png");
         addStudentBtn->setParent(this);
@@ -55,6 +59,7 @@ AdminWindow::AdminWindow(QWidget *parent)
             addStudentDialog->setModal(1);
             addStudentDialog->show();
         });
+
         //2.查找学生
         myPushButton *searchStudentBtn = new myPushButton(":/btn.png");
         searchStudentBtn->setParent(this);
