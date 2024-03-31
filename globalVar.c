@@ -19,30 +19,42 @@ char *STU_FILE = "D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";//学生文�
 
 char *ADMIN_FILE = "D:/c++/Qt/ScoreManagementSystem/adminInfo.txt"; //教师文件位置
 
-const char allCourses[100][100] = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
+const char allCourses[100][100] = {
+    "计算机科学导论",
+    "数据结构与算法",
+    "操作系统",
+    "数据库系统",
+    "计算机网络",
+    "编译原理",
+    "人工智能",
+    "机器学习",
+    "软件工程",
+    "网络安全"
+};
 
-float credits[100] = {
-    4.0, // 高等数学的绩点
-    3.5, // 线性代数的绩点
-    3.7, // 概率论与数理统计的绩点
-    3.2, // 大学物理的绩点
-    3.6, // 化学基础的绩点
-    3.8, // 生物学导论的绩点
-    3.4, // 地球科学的绩点
+const float credits[100] = {
+    4.0,
+    3.5,
+    3.7,
+    3.2,
+    3.6,
+    3.8,
+    3.4,
     3.9,
     2.5,
     3.5,
     4.0,
+    3.1
 };
 
-char colleges[MAX_COLLEGE_COUNT][MAX_NAME_LENGTH] = {
+const char colleges[MAX_COLLEGE_COUNT][MAX_NAME_LENGTH] = {
     "计算机科学与技术学院",
     "电子工程学院",
     "化学与化工学院"
     // 其他学院名称可以继续添加
 };
 
-char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH] = {
+const char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH] = {
     // 计算机学院的专业
     {
         "计算机科学与技术",
@@ -65,28 +77,28 @@ char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH] = {
     // 其他学院的专业信息可以继续添加
 };
 
-char majorCourses[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_COURSES_PER_MAJOR] = {
+const int majorCourses[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_COURSES_PER_MAJOR] = {
     // 计算机学院
     {
         // 计算机科学与技术专业
-        "0",
+        {1, 2,3},
         // 软件工程专业
-        "1",
+        {4, 5,6,7,8,9},
         // 物联网工程专业
-        "2",
+        {6, 7, 8}
     },
     // 电子工程学院
     {
         // 电子信息工程专业
-        "3",
+        {9,1},
         // 通信工程专业
-        "4",
+        {1,2}
     },
     // 化学与化工学院
     {
         // 化学专业
-        "5",
+        {1,2,3},
         // 化学工程专业
-        "6",
+        {2,3,4}
     }
 };

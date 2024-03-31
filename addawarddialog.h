@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QPushButton>
 #include <QDoubleValidator>
+#include <QDate>
 #include "student.h"
 
 namespace Ui {
@@ -19,6 +20,7 @@ class AddAwardDialog : public QDialog {
   public:
     explicit AddAwardDialog(QWidget *parent = nullptr);
     Award newAward;
+    void setAward(Award oldAward);//设置待修改奖项
     ~AddAwardDialog();
 
   private:

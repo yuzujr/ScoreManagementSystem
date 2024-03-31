@@ -7,7 +7,7 @@ typedef struct Award { //获奖信息
 
     char award_hosted_by[100];//主办单位
 
-    int award_winner_num;//获奖者数量
+    int award_winner_num; //获奖者数量
 
     char award_allwinner[100][100];//所有获奖者
 
@@ -22,7 +22,7 @@ typedef struct Award { //获奖信息
 typedef struct Paper { //论文信息
     char paper_name[1000];//论文名称
 
-    int writer_num;//作者数量
+    int writer_num; //作者数量
 
     char paper_allwriter[100][100];//所有作者（如果有通讯作者放第一位并且加上@）
 
@@ -51,15 +51,18 @@ typedef struct Student {
 
     Paper stu_paper[100];
 
-    int stu_paper_num;//论文数量
+    int stu_paper_num; //论文数量
 
     double stu_course_grade[100][3];//课程编号、成绩、绩点
 
-    int stu_course_num;//课程数量
+    int stu_course_num; //课程数量
 
     double stu_grade_point;//绩点
 
     int stu_classnum;//班级
 } Student;
 
-
+//结构体初始化，防止产生未定义行为
+extern void paperInit(Paper *paper);
+extern void awardInit(Award *award);
+extern void studentInit(Student *student);

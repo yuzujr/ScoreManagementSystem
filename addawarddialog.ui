@@ -44,7 +44,7 @@
         </font>
        </property>
        <property name="text">
-        <string>奖项名称：  </string>
+        <string>*奖项名称：  </string>
        </property>
       </widget>
      </item>
@@ -78,7 +78,7 @@
         </font>
        </property>
        <property name="text">
-        <string>主办单位：  </string>
+        <string>*主办单位：  </string>
        </property>
       </widget>
      </item>
@@ -115,7 +115,7 @@
         </font>
        </property>
        <property name="text">
-        <string>所有获奖者（用；隔开）：</string>
+        <string>*所有获奖者（用；隔开）：</string>
        </property>
       </widget>
      </item>
@@ -155,7 +155,7 @@
         </font>
        </property>
        <property name="text">
-        <string>是否加分：</string>
+        <string>*是否加分：</string>
        </property>
       </widget>
      </item>
@@ -290,7 +290,7 @@
         </font>
        </property>
        <property name="text">
-        <string>大赛级别：</string>
+        <string>*大赛级别：</string>
        </property>
       </widget>
      </item>
@@ -355,7 +355,7 @@
         </font>
        </property>
        <property name="text">
-        <string>获奖时间：</string>
+        <string>*获奖时间：</string>
        </property>
       </widget>
      </item>

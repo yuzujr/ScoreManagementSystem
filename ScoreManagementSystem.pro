@@ -15,6 +15,7 @@ SOURCES += \
     adminwindow.cpp \
     changepasswddialog.cpp \
     dataProcess.c \
+    findstudentdialog.cpp \
     globalVar.c \
     logInCheck.c \
     loginwidget.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
     projecttable.cpp \
     scoretable.cpp \
     student-grademanager.c \
+    student.c \
     studentwindow.cpp
 
 HEADERS += \
@@ -33,6 +35,7 @@ HEADERS += \
     adminwindow.h \
     changepasswddialog.h \
     dataProcess.h \
+    findstudentdialog.h \
     globalVar.h \
     logInCheck.h \
     loginwidget.h \
@@ -49,6 +52,7 @@ FORMS += \
     addpaperdialog.ui \
     addstudentdialog.ui \
     changepasswddialog.ui \
+    findstudentdialog.ui \
     loginwidget.ui \
     mainwindow.ui \
     projecttable.ui \

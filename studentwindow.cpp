@@ -271,7 +271,7 @@ StudentWindow::StudentWindow(QWidget *parent)
         imageLabel->resize(QSize(image->size()));
         QLabel *infoLabel = new QLabel(this);
         infoLabel->setFont(font);
-        infoLabel->setText(QString(student->stu_number) + "\n" + QString::fromLocal8Bit(student->stu_name));
+        infoLabel->setText(QString::fromUtf8(student->stu_number) + "\n" + QString::fromUtf8(student->stu_name));
         infoLabel->adjustSize();
         infoLabel->move(725, 10);
         infoLabel->show();

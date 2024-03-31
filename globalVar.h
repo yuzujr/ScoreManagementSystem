@@ -28,10 +28,10 @@ extern Student *find_result[100];//查找结果
 
 extern const char allCourses[100][100];//所有课程
 
-extern float credits[100];//各课程绩点
+extern const float credits[100];//各课程绩点
 
-extern char colleges[MAX_COLLEGE_COUNT][MAX_NAME_LENGTH];//所有学院
+extern const char colleges[MAX_COLLEGE_COUNT][MAX_NAME_LENGTH];//所有学院
 
-extern char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH];//各学院对应专业
+extern const char majors[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_NAME_LENGTH];//各学院对应专业
 
-extern char majorCourses[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_COURSES_PER_MAJOR];//各专业对应课程
+extern const int majorCourses[MAX_COLLEGE_COUNT][MAX_MAJOR_PER_COLLEGE][MAX_COURSES_PER_MAJOR];//各专业对应课程

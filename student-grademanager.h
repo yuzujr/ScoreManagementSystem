@@ -19,6 +19,7 @@ void init_find_result();//清空查找结果
 
 stu_list *build();//创建空链表
 
+//注意：这里传入的是Student指针，Student生命周期不能确定，所以插入后立即保存
 void insert_stu(stu_list *pos/*在此节点后插入*/, Student *stu); //增加学生
 
 stu_list *init_list(stu_list *);//初始化名单

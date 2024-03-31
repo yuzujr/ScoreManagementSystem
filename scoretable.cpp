@@ -2,7 +2,6 @@
 #include "ui_scoretable.h"
 #include "globalVar.h"
 
-// extern float credits[100];
 ScoreTable::ScoreTable(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ScoreTable) {

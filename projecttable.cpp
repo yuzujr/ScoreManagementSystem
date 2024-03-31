@@ -77,7 +77,7 @@ void ProjectTable::printPaper(Student *stu, int page) {
         ui->tableWidget->setItem(row, 0, item);
     }
     //论文名称
-    ui->tableWidget->item(0, 0)->setText(QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_name));
+    ui->tableWidget->item(0, 0)->setText(QString::fromUtf8(stu->stu_paper[page - 1].paper_name));
     //所有作者
     QString allWriter;
     for (int i = 0; i < stu->stu_paper[page - 1].writer_num; i++) {
@@ -87,17 +87,17 @@ void ProjectTable::printPaper(Student *stu, int page) {
             for (int i = 0; i + 1 < strlen(stu->stu_paper[page - 1].paper_allwriter[0]); i++) {
                 writer[i] = stu->stu_paper[page - 1].paper_allwriter[0][i + 1];
             }
-            allWriter += QString::fromLocal8Bit(writer) + ";  ";
+            allWriter += QString::fromUtf8(writer) + ";  ";
         } else {
-            allWriter += QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_allwriter[i]);
+            allWriter += QString::fromUtf8(stu->stu_paper[page - 1].paper_allwriter[i]);
             allWriter += "  ";
         }
     }
     ui->tableWidget->item(1, 0)->setText(allWriter);
     //期刊名称
-    ui->tableWidget->item(2, 0)->setText(QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_periodicalname));
+    ui->tableWidget->item(2, 0)->setText(QString::fromUtf8(stu->stu_paper[page - 1].paper_periodicalname));
     //发表时间
-    ui->tableWidget->item(3, 0)->setText(QString::fromLocal8Bit(stu->stu_paper[page - 1].paper_time));
+    ui->tableWidget->item(3, 0)->setText(QString::fromUtf8(stu->stu_paper[page - 1].paper_time));
     //论文加分
     ui->tableWidget->item(4, 0)->setText(QString::number(stu->stu_paper[page - 1].paper_extra_credit));
 }
@@ -141,18 +141,18 @@ void ProjectTable::printAward(Student *stu, int page) {
     }
 
     //奖项名称
-    ui->tableWidget->item(0, 0)->setText(QString::fromLocal8Bit(stu->stu_award[page - 1].award_name));
+    ui->tableWidget->item(0, 0)->setText(QString::fromUtf8(stu->stu_award[page - 1].award_name));
     //所有获奖者
     QString allWinner;
     for (int i = 0; i < stu->stu_award[page - 1].award_winner_num; i++) {
-        allWinner += QString::fromLocal8Bit(stu->stu_award[page - 1].award_allwinner[i]);
+        allWinner += QString::fromUtf8(stu->stu_award[page - 1].award_allwinner[i]);
         allWinner += "  ";
     }
     ui->tableWidget->item(1, 0)->setText(allWinner);
     //主办方名称
-    ui->tableWidget->item(2, 0)->setText(QString::fromLocal8Bit(stu->stu_award[page - 1].award_hosted_by));
+    ui->tableWidget->item(2, 0)->setText(QString::fromUtf8(stu->stu_award[page - 1].award_hosted_by));
     //获奖时间
-    ui->tableWidget->item(3, 0)->setText(QString::fromLocal8Bit(stu->stu_award[page - 1].award_time));
+    ui->tableWidget->item(3, 0)->setText(QString::fromUtf8(stu->stu_award[page - 1].award_time));
     //奖项加分
     ui->tableWidget->item(4, 0)->setText(QString::number(stu->stu_award[page - 1].is_extra_credit));
 }

@@ -8,13 +8,15 @@
 #include "student-grademanager.c"
 #include "addstudentdialog.h"
 #include "globalVar.h"
+#include "findstudentdialog.h"
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
 
 //TODO：1.修改一下日期的样式，完成奖项、论文编辑操作，完成新建学生操作
 //2.查找->修改（基于新建学生窗口）、删除（验证密码）
-//3.
+//3.成绩总览（基本信息+GPA；ctrl+f快速查找->查看详细信息）
+//4.实现教师层级...
 AdminWindow::AdminWindow(QWidget *parent)
     : QMainWindow{parent} {
     //加载背景图
@@ -44,8 +46,25 @@ AdminWindow::AdminWindow(QWidget *parent)
         delete logIn;
         //登录后操作
         //0.初始化链表
-        //stu_list *listHead = build();
-        init_find_result();
+        stu_list *listHead = build();
+        load_data(listHead);
+        //测试输出
+        stu_list *p = listHead->next;
+        while (p != NULL) {
+            qDebug("姓名：%s\n", p->m_stu.stu_name);
+            qDebug("学号：%s  密码：%s\n", p->m_stu.stu_number, p->m_stu.stu_password);
+            qDebug("学院：%s  专业：%s  绩点：%.1lf\n", p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_grade_point);
+            qDebug("课程及其成绩：\n");
+            for (int i = 0; i < p->m_stu.stu_course_num; i++) {
+                qDebug("课程%d：%s  成绩：%.1lf\n", i + 1, allCourses[(int)p->m_stu.stu_course_grade[i][0]], p->m_stu.stu_course_grade[i][1]);
+            }
+            qDebug("获奖信息：\n");
+            for (int i = 0; i < p->m_stu.stu_award_num; i++) {
+                qDebug("奖项%d：%s\n", i + 1, p->m_stu.stu_award[i]);
+            }
+            p = p->next;
+        }
+
         //1.增加学生
         myPushButton *addStudentBtn = new myPushButton(":/btn.png");
         addStudentBtn->setParent(this);
@@ -54,10 +73,15 @@ AdminWindow::AdminWindow(QWidget *parent)
         addStudentBtn->move((this->width() - addStudentBtn->width()) / 2, 100);
         addStudentBtn->show();
         connect(addStudentBtn, &myPushButton::clicked, [ = ]() {
-            AddStudentDialog *addStudentDialog = new AddStudentDialog(this);
+            AddStudentDialog *addStudentDialog = new AddStudentDialog(this, listHead);
             addStudentDialog->setGeometry(this->geometry());
             addStudentDialog->setModal(1);
             addStudentDialog->show();
+            connect(addStudentDialog, &AddStudentDialog::addStudentSuccessful, [ = ]() {
+                insert_stu(listHead, &addStudentDialog->newStudent);
+                save_data(listHead);
+                addStudentDialog->deleteLater();
+            });//添加成功
         });
 
         //2.查找学生
@@ -67,6 +91,13 @@ AdminWindow::AdminWindow(QWidget *parent)
         searchStudentBtn->resize(200, 50);
         searchStudentBtn->move((this->width() - searchStudentBtn->width()) / 2, 200);
         searchStudentBtn->show();
+        connect(searchStudentBtn, &myPushButton::clicked, [ = ]() {
+            FindStudentDialog *findStudentDialog = new FindStudentDialog(this, listHead);
+            findStudentDialog->move(this->x() + (this->width() - findStudentDialog->width()) / 2, this->y() + 100);
+            findStudentDialog->setModal(1);
+            findStudentDialog->show();
+        });
+
         //3.成绩总览(统计，按GPA、姓名首字母排名）(快速搜索ctrl+f）
         myPushButton *scoreOverviewBtn = new myPushButton(":/btn.png");
         scoreOverviewBtn->setParent(this);

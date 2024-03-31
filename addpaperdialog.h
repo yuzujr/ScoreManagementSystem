@@ -2,6 +2,12 @@
 #define ADDPAPERDIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
+#include <QString>
+#include <QStringList>
+#include <QPushButton>
+#include <QDoubleValidator>
+#include <QDate>
 #include "student.h"
 
 namespace Ui {
@@ -14,6 +20,7 @@ class AddPaperDialog : public QDialog {
   public:
     explicit AddPaperDialog(QWidget *parent = nullptr);
     Paper newPaper;
+    void setPaper(Paper oldPaper);//设置待修改论文
     ~AddPaperDialog();
 
   private:
