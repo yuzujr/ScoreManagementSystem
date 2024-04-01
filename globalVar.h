@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include "student.h"
+#include "student-grademanager.h"
 
 #define MAX_COLLEGE_COUNT 100//最多学院数量
 #define MAX_MAJOR_PER_COLLEGE 10//各学院最多专业数量
@@ -24,7 +25,7 @@ extern char *STU_FILE;//学生文件位置
 
 extern char *ADMIN_FILE; //教师文件位置
 
-extern Student *find_result[100];//查找结果
+extern stu_list *find_result[100];//查找结果
 
 extern const char allCourses[100][100];//所有课程
 

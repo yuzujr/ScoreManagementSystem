@@ -146,7 +146,7 @@ int find_stu_num(stu_list* head, char stu_num[])
 	{
         if (!strcmp(p->m_stu.stu_number, stu_num))
 		{
-			find_result[number] = &p->m_stu;
+            find_result[number] = p;
 			number++;
 		}
         p=p->next;
@@ -163,7 +163,7 @@ int find_stu_name(stu_list* head, char name[])
 	{
         if (!strcmp(p->m_stu.stu_name, name))
         {
-            find_result[number] =&p->m_stu;
+            find_result[number] =p;
 			number++;
         }
         p=p->next;
@@ -180,7 +180,7 @@ int find_stu_college(stu_list* head, char college[])
 	{
         if (!strcmp(p->m_stu.stu_college, college))
 		{
-			find_result[number] = &p->m_stu;
+            find_result[number] = p;
 			number++;
 		}
         p=p->next;
@@ -197,7 +197,7 @@ int find_stu_major(stu_list* head, char major[])
 	{
         if (!strcmp(p->m_stu.stu_major, major))
 		{
-			find_result[number] = &p->m_stu;
+            find_result[number] = p;
 			number++;
 		}
         p=p->next;
@@ -214,7 +214,7 @@ int find_stu_class(stu_list* head, char college[],int classnumber)
 	{
         if (!strcmp(p->m_stu.stu_college, college)&&p->m_stu.stu_classnum==classnumber)
 		{
-			find_result[number] = &p->m_stu;
+            find_result[number] = p;
 			number++;
 		}
         p=p->next;
@@ -373,14 +373,4 @@ void printAll(stu_list* head)
 		}
 		p = p->next;
 	}	
-}
-
-void printStudent(Student* stu){
-
-}
-
-void printFindResult(int size){
-    for(int i=0;i<size;i++){
-        printStudent(find_result[i]);
-    }
 }

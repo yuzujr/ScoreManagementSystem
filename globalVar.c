@@ -13,7 +13,7 @@ int isAdmin=0;//教师或管理员
 
 int lineNumber=0;//学生在文件中的位置
 
-Student *find_result[100]={NULL};//查找结果
+stu_list *find_result[100]={NULL};//查找结果
 
 char *STU_FILE = "D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";//学生文件位置
 

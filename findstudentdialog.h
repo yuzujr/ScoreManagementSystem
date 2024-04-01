@@ -4,8 +4,10 @@
 #include <QDialog>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QMessageBox>
 #include "student.h"
 #include "student-grademanager.h"
+#include "addstudentdialog.h"
 
 namespace Ui {
     class FindStudentDialog;

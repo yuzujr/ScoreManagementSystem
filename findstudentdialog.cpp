@@ -21,18 +21,22 @@ FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList) :
     });
     //查询
     connect(ui->pushButton, &QPushButton::clicked, [ = ]() {
-        int ret = 0;
+        int ret = 0;//结果个数
         if (ui->nameRadioButton->isChecked()) {
             char *name = ui->lineEdit->text().toUtf8().data();
-            ret = find_stu_num(studentList, name);
-            if (ret > 1);
+            ret = find_stu_name(studentList, name);
         } else {
             char *number = ui->lineEdit->text().toUtf8().data();
             ret = find_stu_num(studentList, number);
         }
-        if (ret == 1) {
-
+        if (ret == 0) {
+            QMessageBox::information(this, "查找失败", "未找到指定学生");
+            return;
         }
+        AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true);
+        retStudentDialog->findCnt = ret;
+        retStudentDialog->setStudent(retStudentDialog->studentIndex);//设置显示第一个学生
+        retStudentDialog->show();
     });
     //返回
     connect(ui->pushButton_2, &QPushButton::clicked, [ = ]() {
