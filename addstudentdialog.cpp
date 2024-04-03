@@ -5,6 +5,28 @@
 #include "globalVar.h"
 
 
+inline int findCollegeIndex(const char *college) {
+    int index = 0;
+    for (; strcmp(college, colleges[index]) != 0; index++) {
+        // 如果 colleges 中没有找到对应的学院，返回 -1
+        if (colleges[index][0] == '\0') {
+            return -1;
+        }
+    }
+    return index;
+}
+
+inline int findMajorIndex(int collegeIndex, const char *major) {
+    int index = 0;
+    for (; strcmp(major, majors[collegeIndex][index]) != 0; index++) {
+        // 如果 majors 中没有找到对应的专业，返回 -1
+        if (majors[collegeIndex][index][0] == '\0') {
+            return -1;
+        }
+    }
+    return index;
+}
+
 AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool isResult) :
     QDialog(parent),
     ui(new Ui::AddStudentDialog) {
@@ -262,6 +284,8 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
         newStudent.stu_password[sizeof(newStudent.stu_password) - 1] = '\0';
         strcat(newStudent.stu_password, "jlu@");
         strcat(newStudent.stu_password, newStudent.stu_number);
+        insert_stu(studentList, &newStudent);
+        save_data(studentList);
         emit addStudentSuccessful();
         QMessageBox::information(this, "提示", "添加成功！");
     });
@@ -328,52 +352,7 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             //重连okBtn
             disconnect(ui->okBtn, nullptr, nullptr, nullptr);
             connect(ui->okBtn, &QPushButton::clicked, [ = ]() {
-                //检查必填项是否为空
-                if (ui->nameEdit->text().isEmpty() || ui->numberEdit->text().isEmpty() || ui->classEdit->text().isEmpty()) {
-                    //弹出警告
-                    QMessageBox::warning(this, "警告", "必填项不得为空！");
-                    return;
-                }
-                //检查学号是否重复
-                if (find_stu_num(studentList, ui->numberEdit->text().toUtf8().data()) != 0
-                    && strcmp(find_result[studentIndex]->m_stu.stu_number, ui->numberEdit->text().toUtf8().data()) != 0) {
-                    //弹出警告
-                    QMessageBox::warning(this, "警告", "学号重复！");
-                    return;
-                }
-                // 弹出对话框询问用户是否确认操作
-                QMessageBox::StandardButton result = QMessageBox::question(this, "提示", "是否确认操作？",
-                        QMessageBox::Yes | QMessageBox::No);
-                // 如果用户选择了 "No"，则不关闭对话框
-                if (result == QMessageBox::No) {
-                    return;
-                }
-                //读入其他信息
-                //学号
-                strcpy(newStudent.stu_number, ui->numberEdit->text().toUtf8().data());
-                //姓名
-                strcpy(newStudent.stu_name, ui->nameEdit->text().toUtf8().data());
-                //学院
-                strcpy(newStudent.stu_college, ui->collegeSelect->itemText(ui->collegeSelect->currentIndex()).toUtf8().data());
-                //专业
-                strcpy(newStudent.stu_major, ui->majorSelect->itemText(ui->majorSelect->currentIndex()).toUtf8().data());
-                //班级
-                newStudent.stu_classnum = ui->classEdit->text().toInt();
-                //所选课程编号
-                int courseNum = 0;
-                for (; majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] != 0 && courseNum < MAX_COURSES_PER_MAJOR; courseNum++) {
-                    newStudent.stu_course_grade[courseNum][0] = majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] - 1;
-                    newStudent.stu_course_grade[courseNum][1] = 0; //成绩为0
-                    newStudent.stu_course_grade[courseNum][2] = 0; //绩点为0
-                }
-                newStudent.stu_course_num = courseNum;
-                //密码(默认设为jlu@学号)
-                newStudent.stu_password[sizeof(newStudent.stu_password) - 1] = '\0';
-                strcat(newStudent.stu_password, "jlu@");
-                strcat(newStudent.stu_password, newStudent.stu_number);
-                this->close();
-                deleteLater();
-                QMessageBox::information(this, "提示", "修改成功！");
+                editStudent(studentList);
             });
         });//编辑
     }
@@ -385,33 +364,7 @@ void AddStudentDialog::paintEvent(QPaintEvent *event) {
     painter.drawPixmap(0, 0, this->width() * 1.2, this->height(), this->backgroundPixmap);
 }
 
-inline int findCollegeIndex(const char *college) {
-    int index = 0;
-    for (; strcmp(college, colleges[index]) != 0; index++) {
-        // 如果 colleges 中没有找到对应的学院，返回 -1
-        if (colleges[index][0] == '\0') {
-            return -1;
-        }
-    }
-    return index;
-}
-
-inline int findMajorIndex(int collegeIndex, const char *major) {
-    int index = 0;
-    for (; strcmp(major, majors[collegeIndex][index]) != 0; index++) {
-        // 如果 majors 中没有找到对应的专业，返回 -1
-        if (majors[collegeIndex][index][0] == '\0') {
-            return -1;
-        }
-    }
-    return index;
-}
-
 void AddStudentDialog::setStudent(int studentIndex) {
-    //1.两种界面之间切换
-    //2.先选择哪个是查找对象（如果是按学号查找则直接进入下一步）
-    //3.呼出删除（验证密码）和编辑键（启用文本框）
-
     if (studentIndex == 0) {
         ui->pushButton->setVisible(true);
         ui->pushButton_2->setVisible(true);
@@ -456,6 +409,74 @@ void AddStudentDialog::setStudent(int studentIndex) {
     for (int i = 0; newStudent.stu_paper[i].paper_name[0] != '\0'; i++) {
         ui->paperSelect->addItem(newStudent.stu_paper[i].paper_name);
     }
+}
+
+void AddStudentDialog::editStudent(stu_list *studentList){
+    stu_list* confirmedStudent=find_result[studentIndex];
+    //检查必填项是否为空
+    if (ui->nameEdit->text().isEmpty() || ui->numberEdit->text().isEmpty() || ui->classEdit->text().isEmpty()) {
+        //弹出警告
+        QMessageBox::warning(this, "警告", "必填项不得为空！");
+        return;
+    }
+    //检查学号是否重复
+    if (find_stu_num(studentList, ui->numberEdit->text().toUtf8().data()) != 0
+        && strcmp(confirmedStudent->m_stu.stu_number, ui->numberEdit->text().toUtf8().data()) != 0) {
+        //弹出警告
+        QMessageBox::warning(this, "警告", "学号重复！");
+        return;
+    }
+    // 弹出对话框询问用户是否确认操作
+    QMessageBox::StandardButton result = QMessageBox::question(this, "提示", "是否确认操作？",
+                                                               QMessageBox::Yes | QMessageBox::No);
+    // 如果用户选择了 "No"，则不关闭对话框
+    if (result == QMessageBox::No) {
+        return;
+    }
+    //读入其他信息
+    //学号
+    strcpy(newStudent.stu_number, ui->numberEdit->text().toUtf8().data());
+    //姓名
+    strcpy(newStudent.stu_name, ui->nameEdit->text().toUtf8().data());
+    //学院
+    strcpy(newStudent.stu_college, ui->collegeSelect->itemText(ui->collegeSelect->currentIndex()).toUtf8().data());
+    //专业
+    strcpy(newStudent.stu_major, ui->majorSelect->itemText(ui->majorSelect->currentIndex()).toUtf8().data());
+    //班级
+    newStudent.stu_classnum = ui->classEdit->text().toInt();
+    //所选课程编号
+    int courseNum = 0;
+    for (; majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] != 0 && courseNum < MAX_COURSES_PER_MAJOR; courseNum++) {
+        newStudent.stu_course_grade[courseNum][0] = majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] - 1;
+    }
+    newStudent.stu_course_num = courseNum;
+    strcpy(confirmedStudent->m_stu.stu_number, newStudent.stu_number);
+    strcpy(confirmedStudent->m_stu.stu_password, newStudent.stu_password);
+    strcpy(confirmedStudent->m_stu.stu_name, newStudent.stu_name);
+    strcpy(confirmedStudent->m_stu.stu_college, newStudent.stu_college);
+    strcpy(confirmedStudent->m_stu.stu_major, newStudent.stu_major);
+    confirmedStudent->m_stu.stu_award_num = newStudent.stu_award_num;
+    for (int i = 0; i < newStudent.stu_award_num && i < 100; ++i) {
+        confirmedStudent->m_stu.stu_award[i] = newStudent.stu_award[i];
+    }
+    confirmedStudent->m_stu.stu_paper_num = newStudent.stu_paper_num;
+    for (int i = 0; i < newStudent.stu_paper_num && i < 100; ++i) {
+        confirmedStudent->m_stu.stu_paper[i] = newStudent.stu_paper[i];
+    }
+    confirmedStudent->m_stu.stu_course_num = newStudent.stu_course_num;
+    for (int i = 0; i < newStudent.stu_course_num && i < 100; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            confirmedStudent->m_stu.stu_course_grade[i][j] = newStudent.stu_course_grade[i][j];
+        }
+    }
+    confirmedStudent->m_stu.stu_grade_point = newStudent.stu_grade_point;
+    confirmedStudent->m_stu.stu_classnum = newStudent.stu_classnum;
+    //替换原学生
+    save_data(studentList);//保存数据
+    load_data(studentList);//加载数据
+    this->close();
+    this->deleteLater();
+    QMessageBox::information(this, "提示", "修改成功！");
 }
 
 AddStudentDialog::~AddStudentDialog() {

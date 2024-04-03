@@ -3,12 +3,13 @@
 #include "loginwidget.h"
 #include "mypushbutton.h"
 #include "changepasswddialog.h"
-#include "scoretable.h"
 #include "student.h"
 #include "student-grademanager.c"
 #include "addstudentdialog.h"
 #include "globalVar.h"
 #include "findstudentdialog.h"
+#include "gpatable.h"
+#include "statistics.c"
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
@@ -78,9 +79,8 @@ AdminWindow::AdminWindow(QWidget *parent)
             addStudentDialog->setModal(1);
             addStudentDialog->show();
             connect(addStudentDialog, &AddStudentDialog::addStudentSuccessful, [ = ]() {
-                insert_stu(listHead, &addStudentDialog->newStudent);
-                save_data(listHead);
-                addStudentDialog->deleteLater();
+                delete addStudentDialog;
+                load_data(listHead);
             });//添加成功
         });
 
@@ -105,6 +105,139 @@ AdminWindow::AdminWindow(QWidget *parent)
         scoreOverviewBtn->resize(200, 50);
         scoreOverviewBtn->move((this->width() - scoreOverviewBtn->width()) / 2, 300);
         scoreOverviewBtn->show();
+        /*返回按钮*/
+        myPushButton *backBtn = new myPushButton(":/btn.png");
+        backBtn->setParent(this);
+        backBtn->setText("返回菜单");
+        backBtn->resize(200, 50);
+        backBtn->move(this->width() - backBtn->width(), this->height() - backBtn->height());
+        GPATable *table = new GPATable(this);
+        table->NonePixmap.load(":/None.png");
+        //数据
+        const int studentNumber = CntNum(listHead);//学生总数
+        const int pageNumber = (studentNumber + 10 - 1) / 10;//总页数
+        /*x-y 总记录数 z  总页数 j  跳转：k*/
+        // QLabel *info = new QLabel(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10) + " 总记录数 " + QString::number(
+        //         studentNumber) + "  总页数 " + QString::number(
+        //         pageNumber) + "  跳转：", this);
+        // info->setFont(font);
+        // info->adjustSize();
+        // info->move(190, 557);
+        // //变量长度
+        // int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber));
+        // /*跳转文本框*/
+        // QLineEdit *pageNumberEdit = new QLineEdit(this);
+        // pageNumberEdit->setFont(font);
+        // pageNumberEdit->setFixedSize(45, 30);
+        // pageNumberEdit->move(455 + (*varLenth - 6) * 5, 550); //每多一个数字，右移5个像素
+        // // 设置只能输入数字
+        // QRegularExpression regExp("\\d{0,4}"); // 使用正则表达式限制输入为最多4位数字
+        // QValidator *validator = new QRegularExpressionValidator(regExp, this);
+        // pageNumberEdit->setValidator(validator);
+        // //跳转到某页
+        // connect(pageNumberEdit, &QLineEdit::returnPressed, [ =, &currentPage ]() {
+        //     if (pageNumberEdit->text().isEmpty());
+        //     else {
+        //         int newPageNumber = pageNumberEdit->text().toInt();//防止001，049等数字出现
+        //         if (newPageNumber == 0) {
+        //             newPageNumber = 1;
+        //         }//如果页码为0，跳转到第一页
+        //         if (newPageNumber > pageNumber) {
+        //             newPageNumber = pageNumber;
+        //         }//如果页码大于最大页码，跳转到最后一页
+        //         pageNumberEdit->setText(QString::number(newPageNumber));
+        //         currentPage = newPageNumber;
+        //         table->printTable(student, newPageNumber);
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber));
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 5, 550); //每多一个数字，右移5个像素
+        //     }
+        // });
+        // /*左翻10页按钮*/
+        // myPushButton *left10Btn = new myPushButton(":/left10.png");
+        // left10Btn->setParent(this);
+        // left10Btn->move(20, 550);
+        // connect(left10Btn, &myPushButton::clicked, [ =, &currentPage ]() {
+        //     if (currentPage == 1);//不做任何处理
+        //     else if (currentPage - 10 < 1) {
+        //         table->printTable(student, 1);
+        //         currentPage = 1;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     } //左边界
+        //     else {
+        //         table->printTable(student, currentPage - 10);
+        //         currentPage -= 10;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     }
+        // });
+        // /*左翻1页按钮*/
+        // myPushButton *left1Btn = new myPushButton(":/left1.png");
+        // left1Btn->setParent(this);
+        // left1Btn->move(60, 550);
+        // connect(left1Btn, &myPushButton::clicked, [ =, &currentPage ]() {
+        //     if (currentPage == 1); //不做任何处理
+        //     else {
+        //         table->printTable(student, currentPage - 1);
+        //         currentPage -= 1;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     }
+        // });
+        // /*右翻1页按钮*/
+        // myPushButton *right1Btn = new myPushButton(":/right1.png");
+        // right1Btn->setParent(this);
+        // right1Btn->move(100, 550);
+        // connect(right1Btn, &myPushButton::clicked, [ =, &currentPage]() {
+        //     if (currentPage == pageNumber); //不做任何处理
+        //     else {
+        //         table->printTable(student, currentPage + 1);
+        //         currentPage += 1;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     }
+        // });
+        // /*右翻10页按钮*/
+        // myPushButton *right10Btn = new myPushButton(":/right10.png");
+        // right10Btn->setParent(this);
+        // right10Btn->move(140, 550);
+        // connect(right10Btn, &myPushButton::clicked, [ =, &currentPage ]() {
+        //     if (currentPage == pageNumber);//不做任何处理
+        //     else if (currentPage + 10 > pageNumber) {
+        //         table->printTable(student, pageNumber);
+        //         currentPage = pageNumber;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     } //右边界
+        //     else {
+        //         table->printTable(student, currentPage + 10);
+        //         currentPage += 10;
+        //         info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(studentNumber) + " 总记录数 " + QString::number(
+        //                 studentNumber) + "  总页数 " + QString::number(
+        //                 pageNumber) + "  跳转：");
+        //         *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(studentNumber) + countDigits(pageNumber);
+        //         pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
+        //     }
+        // });
+
         //4.修改密码
         myPushButton *changePasswdBtn = new myPushButton(":/btn.png");
         changePasswdBtn->setParent(this);
@@ -132,6 +265,25 @@ AdminWindow::AdminWindow(QWidget *parent)
             });
         });
         exitBtn->show();
+
+        //查看成绩，界面操作
+        connect(scoreOverviewBtn, &myPushButton::clicked, [ = ]() {
+            addStudentBtn->hide();
+            searchStudentBtn->hide();
+            scoreOverviewBtn->hide();
+            changePasswdBtn->hide();
+            exitBtn->hide();
+            // left10Btn->show();
+            // left1Btn->show();
+            // right1Btn->show();
+            // right10Btn->show();
+            // info->show();
+            // pageNumberEdit->show();
+            backBtn->show();
+            this->setCentralWidget(table);
+            table->printTable(listHead, 1);
+            table->show();
+        });
     });
 }
 

@@ -21,6 +21,7 @@ class AddStudentDialog : public QDialog {
     explicit AddStudentDialog(QWidget *parent = nullptr, stu_list *studentList = nullptr, bool isResult = 0);
     void paintEvent(QPaintEvent *event);
     void setStudent(int ret);//设置查找到的学生
+    void editStudent(stu_list *studentList);
     Student newStudent;
     int findCnt = 0; //找到个数
     int studentIndex = 0; //显示的学生序号

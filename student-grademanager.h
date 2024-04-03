@@ -24,9 +24,13 @@ void insert_stu(stu_list *pos/*在此节点后插入*/, Student *stu); //增加�
 
 stu_list *init_list(stu_list *);//初始化名单
 
-stu_list *sort_ascend(stu_list *);//升序
+stu_list *sort_ascend(stu_list *);//GPA升序
 
-stu_list *sort_descend(stu_list *);//降序
+stu_list* sort_ascend_by_name(stu_list*);//姓名升序
+
+stu_list *sort_descend(stu_list *);//GPA降序
+
+stu_list* sort_descend_by_name(stu_list *);//姓名降序
 
 //多方式查找
 int find_stu_num(stu_list *, char[]);

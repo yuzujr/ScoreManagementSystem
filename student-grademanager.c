@@ -36,23 +36,106 @@ stu_list* init_list(stu_list* head)
 
 void insert_stu(stu_list* pos, Student* stu)
 {
-	stu_list* v,*q;
-	v = (stu_list*)malloc(sizeof(stu_list));
-	v->m_stu = *stu;
-	
-	if (pos->next == NULL) {
-		pos->next = v;
-		v->next = NULL;
-		v->prev = pos;
-		
-	}
-	else {
-		q = pos->next;
-		pos->next = v;
-		v->next = q;
-		v->prev = pos;
-		q->prev = v;
-	}
+    if (pos == NULL) {
+        return;
+    }
+
+    stu_list* v = (stu_list*)malloc(sizeof(stu_list));
+    if (v == NULL) {
+        return;
+    }
+
+    v->m_stu = *stu;
+    v->next = pos->next;
+    v->prev = pos;
+
+    if (pos->next != NULL) {
+        pos->next->prev = v;
+    }
+
+    pos->next = v;
+}
+
+stu_list* sort_ascend_by_name(stu_list* head)
+{
+    stu_list* p0, * p, * r0, * r, * tmp;
+    p0 = r0 = tmp = NULL;
+    p0 = head;
+    p = head->next;
+    while (p != NULL)
+    {
+        r = head->next;
+        while (strcmp(r->m_stu.stu_name, p->m_stu.stu_name)<=0 && r != p)
+        {
+            r0 = r;
+            r = r->next;
+        }
+        if (r != p)
+        {
+            tmp = p;
+            stu_list* q = p->next;
+            p0->next = q;
+            if(q!=NULL)q->prev = p0;
+            p = p0;
+            if (r == head->next)
+            {
+                head->next = tmp;
+                tmp->next = r;
+                r->prev = tmp;
+                tmp->prev = head;
+            }
+            else {
+                r0->next = tmp;
+                tmp->next = r;
+                r->prev = tmp;
+                tmp->prev = r0;
+            }
+        }
+        p0 = p;
+        p = p->next;
+    }
+    return head;
+}
+
+stu_list* sort_descend_by_name(stu_list* head)
+{
+    stu_list* p0, * p, * r0, * r, * tmp;
+    p0 = r0 = tmp = NULL;
+    p0 = head;
+    p = head->next;
+    while (p != NULL)
+    {
+        r = head->next;
+        while (strcmp(r->m_stu.stu_name, p->m_stu.stu_name) >= 0 && r != p)
+        {
+            r0 = r;
+            r = r->next;
+        }
+        if (r != p)
+        {
+            tmp = p;
+            stu_list* q = p->next;
+            p0->next = q;
+            if (q != NULL)q->prev = p0;
+            p = p0;
+            if (r == head->next)
+            {
+                head->next = tmp;
+                tmp->next = r;
+                r->prev = tmp;
+                tmp->prev = head;
+            }
+            else {
+                r0->next = tmp;
+                tmp->next = r;
+                r->prev = tmp;
+                tmp->prev = r0;
+            }
+        }
+        p0 = p;
+        p = p->next;
+    }
+    return head;
 }
 
 stu_list* sort_ascend(stu_list* head)
