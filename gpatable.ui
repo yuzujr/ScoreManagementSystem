@@ -70,7 +70,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="siftBtn">
        <property name="text">
         <string>筛选</string>
        </property>
@@ -106,7 +106,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="sortSelect">
        <property name="minimumSize">
         <size>
          <width>150</width>
@@ -293,6 +293,9 @@ QTableCornerButton::section { background-color: transparent; }
      </property>
      <property name="gridStyle">
       <enum>Qt::SolidLine</enum>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>false</bool>
      </property>
      <property name="rowCount">
       <number>10</number>

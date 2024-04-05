@@ -1,14 +1,18 @@
+#pragma once
 #ifndef WORKER_H
 #define WORKER_H
-#pragma once
+#include "globalVar.h"
+#include "dataProcess.h"
 typedef struct Worker {
-    bool isAdmin;
+    bool m_isAdmin;
+
+    char workerNumber[100];//职工号
+
+    char passwd[100];//密码
 
     char stu_college[100];//学院
 
-    char stu_major[100];//专业
+    char teachingCourse[100];//课程名称
+} Worker;
 
-    char allCourses[100][100];//课程名称
-}Worker;
-void workerInit();
 #endif // WORKER_H

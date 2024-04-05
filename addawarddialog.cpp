@@ -80,7 +80,6 @@ AddAwardDialog::AddAwardDialog(QWidget *parent) :
             newAward.is_extra_credit = ui->GPA_edit->text().toDouble();
         }
         newAward.competition_level = ui->levelSelect->currentText()[0].toLatin1();
-        qDebug() << newAward.competition_level;
         strcpy(newAward.award_time, ui->dateEdit->date().toString("yyyy-MM-dd").toUtf8().data());
         emit addAwardSuccessful();
         deleteLater(); // 删除对话框自身

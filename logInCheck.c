@@ -16,8 +16,10 @@ int stuLogInCheck(char* account,char* passwd){
         return -1;//即失败，将在调用处弹出警告
     }
     else {
+        //FILE* dbpf=fopen("D:/c++/Qt/ScoreManagementSystem/debug.txt","w");
         while(!feof(pf)){
             fscanf(pf,"%s %s",faccount,fpasswd);
+            //fprintf(dbpf,"%s %s\n",faccount,fpasswd);
             if(strcmp(faccount,account)==0&&strcmp(fpasswd,passwd)==0){
                 stuFileptr=pf;
                 moveToLineStart(stuFileptr);

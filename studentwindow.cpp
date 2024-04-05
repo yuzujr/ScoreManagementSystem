@@ -18,14 +18,12 @@
 #include <QPixmap>
 #include <cmath>
 
-// extern Student *student;
-
 //为了延长该变量的生命周期，将它设置为全局变量
 int currentPage = 1;//成绩当前页数
 int paperCurPage = 1;
 int awardCurPage = 1;
 
-int countDigits(int n) {//计算十进制整数位数
+inline int countDigits(int n) {//计算十进制整数位数
     if (n == 0) {
         return 1; // 如果整数为 0，则位数为 1
     }
@@ -101,11 +99,9 @@ StudentWindow::StudentWindow(QWidget *parent)
         changePasswdBtn->resize(200, 50);
         changePasswdBtn->move((this->width() - changePasswdBtn->width()) / 2, 400);
         connect(changePasswdBtn, &myPushButton::clicked, [ = ]() {
-            QTimer::singleShot(100, [ = ]() {
-                changePasswdDialog *cpd = new changePasswdDialog(this);
-                cpd->setModal(1);//设为模态对话框
-                this->setCentralWidget(cpd);
-            });
+            changePasswdDialog *cpd = new changePasswdDialog(this);
+            cpd->setModal(1);//设为模态对话框
+            this->setCentralWidget(cpd);
         });
         changePasswdBtn->show();
 

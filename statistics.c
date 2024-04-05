@@ -67,7 +67,7 @@ void GPA_(stu_list* head)
 }
 
 //学号, 科目编号  成绩
-void TxTtoList(stu_list *phead, int MKnum)
+void TxTtoList(stu_list *phead, int MKnum,char fileName[])
 {
     FILE* Out = fopen("list.txt", "r");
     if (Out == NULL)

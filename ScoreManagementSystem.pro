@@ -25,10 +25,12 @@ SOURCES += \
     mypushbutton.cpp \
     projecttable.cpp \
     scoretable.cpp \
+    siftstudentdialog.cpp \
     statistics.c \
     student-grademanager.c \
     student.c \
-    studentwindow.cpp
+    studentwindow.cpp \
+    verifypasswddialog.cpp
 
 HEADERS += \
     Worker.h \
@@ -47,9 +49,11 @@ HEADERS += \
     mypushbutton.h \
     projecttable.h \
     scoretable.h \
+    siftstudentdialog.h \
     student-grademanager.h \
     student.h \
-    studentwindow.h
+    studentwindow.h \
+    verifypasswddialog.h
 
 FORMS += \
     addawarddialog.ui \
@@ -61,7 +65,9 @@ FORMS += \
     loginwidget.ui \
     mainwindow.ui \
     projecttable.ui \
-    scoretable.ui
+    scoretable.ui \
+    siftstudentdialog.ui \
+    verifypasswddialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

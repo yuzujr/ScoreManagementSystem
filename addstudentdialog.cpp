@@ -3,7 +3,7 @@
 #include "addawarddialog.h"
 #include "addpaperdialog.h"
 #include "globalVar.h"
-
+#include "verifypasswddialog.h"
 
 inline int findCollegeIndex(const char *college) {
     int index = 0;
@@ -287,7 +287,6 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
         insert_stu(studentList, &newStudent);
         save_data(studentList);
         emit addStudentSuccessful();
-        QMessageBox::information(this, "提示", "添加成功！");
     });
     if (isResult) {
         //重连okBtn
@@ -308,14 +307,17 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             deleteLater(); // 删除对话框自身
         });
         connect(ui->deleteBtn, &QPushButton::clicked, [ = ]() {
-            int ret = QMessageBox::question(this, "警告", "删除操作不可撤销！", QMessageBox::Yes | QMessageBox::No);
-            if (ret == QMessageBox::Yes) {
+            VerifyPasswdDialog *verifyDialog = new VerifyPasswdDialog(this);
+            verifyDialog->setModal(true);
+            verifyDialog->show();
+            connect(verifyDialog, &VerifyPasswdDialog::verifySuccessful, [ = ]() {
+                // 执行删除操作
                 delete_stu(find_result[studentIndex]);
                 save_data(studentList);
-                // 执行删除操作
+                QMessageBox::information(this, "提示", "删除成功！");
                 this->close();
                 deleteLater();
-            }
+            });
         });//删除
         connect(ui->editBtn, &QPushButton::clicked, [ = ]() {
             ui->nameEdit->setEnabled(true);
@@ -411,8 +413,8 @@ void AddStudentDialog::setStudent(int studentIndex) {
     }
 }
 
-void AddStudentDialog::editStudent(stu_list *studentList){
-    stu_list* confirmedStudent=find_result[studentIndex];
+void AddStudentDialog::editStudent(stu_list *studentList) {
+    stu_list *confirmedStudent = find_result[studentIndex];
     //检查必填项是否为空
     if (ui->nameEdit->text().isEmpty() || ui->numberEdit->text().isEmpty() || ui->classEdit->text().isEmpty()) {
         //弹出警告
@@ -428,7 +430,7 @@ void AddStudentDialog::editStudent(stu_list *studentList){
     }
     // 弹出对话框询问用户是否确认操作
     QMessageBox::StandardButton result = QMessageBox::question(this, "提示", "是否确认操作？",
-                                                               QMessageBox::Yes | QMessageBox::No);
+            QMessageBox::Yes | QMessageBox::No);
     // 如果用户选择了 "No"，则不关闭对话框
     if (result == QMessageBox::No) {
         return;

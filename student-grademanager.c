@@ -19,6 +19,15 @@ stu_list* build()
 	return head;
 }
 
+
+stu_list* build_find_result(){
+    stu_list* findListHead=build();
+    for(int i=0;find_result[i]!=NULL;i++){
+        insert_stu(findListHead,&find_result[i]->m_stu);
+    }
+    return findListHead;
+}
+
 stu_list* init_list(stu_list* head)
 {
 	stu_list* p = head->next;
@@ -288,11 +297,13 @@ int find_stu_major(stu_list* head, char major[])
 	return number;
 }
 
-int find_stu_class(stu_list* head, char college[],int classnumber)
+int find_stu_class(stu_list* head, char college[],int classnumber,char major[])
 {
 	init_find_result();
 	int number = 0;
 	stu_list* p = head->next;
+    if(major==NULL)//如果专业为空
+    {
 	while (p != NULL)
 	{
         if (!strcmp(p->m_stu.stu_college, college)&&p->m_stu.stu_classnum==classnumber)
@@ -301,7 +312,20 @@ int find_stu_class(stu_list* head, char college[],int classnumber)
 			number++;
 		}
         p=p->next;
-	}
+    }
+    }
+    else
+    {
+        while (p != NULL)
+        {
+            if (!strcmp(p->m_stu.stu_college, college)&&p->m_stu.stu_classnum==classnumber&&!strcmp(p->m_stu.stu_major,major))
+            {
+                find_result[number] = p;
+                number++;
+            }
+            p=p->next;
+        }
+    }
 	return number;
 }
 

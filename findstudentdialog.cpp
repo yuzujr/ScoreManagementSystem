@@ -34,7 +34,9 @@ FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList) :
             return;
         }
         AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true);
-        retStudentDialog->findCnt=ret;
+        retStudentDialog->setWindowTitle("查找学生");
+        retStudentDialog->setModal(true);
+        retStudentDialog->findCnt = ret;
         retStudentDialog->setStudent(0);
         retStudentDialog->show();
     });
