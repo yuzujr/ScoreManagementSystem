@@ -385,20 +385,13 @@ double GPATable::averageGrade(stu_list *head) {
     //查找课程索引
     int index = 0;
     int collegeIndex = findCollegeIndex(m_college);
-    qDebug() << "nmd";
-    qDebug() << collegeIndex;
-    qDebug() << p->m_stu.stu_major;
     int majorIndex = findMajorIndex(collegeIndex, p->m_stu.stu_major);
-    qDebug() << "nmd";
-    for (; majorCourses[collegeIndex][majorIndex][index] != 0 && strcmp(m_course, allCourses[majorCourses[collegeIndex][majorIndex][index]]) != 0; index++);
-    qDebug() << "nmd";
+    for (; majorCourses[collegeIndex][majorIndex][index] != 0 && strcmp(m_course, allCourses[majorCourses[collegeIndex][majorIndex][index] - 1]) != 0; index++);
     m_index = index;
-    qDebug() << "nmd";
     while (p != NULL) {
         sum += p->m_stu.stu_course_grade[m_index][1];
         p = p->next;
     }
-    qDebug() << "nmd";
     return sum / CntNum(head);
 }
 
@@ -415,7 +408,7 @@ double GPATable::passRate(stu_list *head) {
     int collegeIndex = findCollegeIndex(m_college);
     while (p != NULL) {
         int majorIndex = findMajorIndex(collegeIndex, p->m_stu.stu_major);
-        for (; majorCourses[collegeIndex][majorIndex][index] != '\0' && strcmp(m_course, allCourses[majorCourses[collegeIndex][majorIndex][index]]) != 0; index++);
+        for (; majorCourses[collegeIndex][majorIndex][index] != '\0' && strcmp(m_course, allCourses[majorCourses[collegeIndex][majorIndex][index] - 1]) != 0; index++);
         m_index = index;
         if (p->m_stu.stu_course_grade[m_index][1] > 60) {
             sum++;

@@ -15,9 +15,9 @@ int lineNumber=0;//学生在文件中的位置
 
 stu_list *find_result[100]={NULL};//查找结果
 
-char *STU_FILE = "studentInfo.txt";//学生文件位置
+char *STU_FILE = "D:/c++/Qt/ScoreManagementSystem/studentInfo.txt";//学生文件位置
 
-char *ADMIN_FILE = "adminInfo.txt"; //教师文件位置
+char *ADMIN_FILE = "D:/c++/Qt/ScoreManagementSystem/adminInfo.txt"; //教师文件位置
 
 const char allCourses[100][100] =
 {
