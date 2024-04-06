@@ -20,6 +20,7 @@ class AdminWindow : public QMainWindow {
     int isStudentValid(stu_list *student);
     char m_course[100];
     int TxTtoList(stu_list *phead, int MKnum, char fileName[]);
+    void Calculate(Student *a);
     ~AdminWindow();
   private:
     QPixmap backgroundPixmap;

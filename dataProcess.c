@@ -208,3 +208,41 @@ Student* loadSingleStudent(){
     moveToLineStart(stuFileptr);
     return student;
 }
+
+double updateCredit(double grade) {
+    //分段记录绩点并计算gpa
+    if (grade >= 90) {
+        return 4.0;
+    } else if (grade >= 85 && grade < 90) {
+        return 3.7;
+    } else if (grade >= 82 && grade < 85) {
+        return 3.3;
+    } else if (grade >= 78 && grade < 82) {
+        return 3.0;
+    } else if (grade >= 75 && grade < 78) {
+        return 2.7;
+    } else if (grade >= 72 && grade < 75) {
+        return 2.3;
+    } else if (grade >= 68 && grade < 72) {
+        return 2.0;
+    } else if (grade >= 64 && grade < 68) {
+        return 1.5;
+    } else if (grade >= 60 && grade < 64) {
+        return 1.0;
+    } else {
+        return 0.0;
+    }
+}
+
+//查找学院索引
+int findCollegeIndex(const char *college) {
+    int index = 0;
+    for (; colleges[index][0] == '\0'&&strcmp(college, colleges[index]) != 0; index++);
+    return index;
+}
+//查找专业索引
+int findMajorIndex(int collegeIndex, const char *major) {
+    int index = 0;
+    for (; majors[collegeIndex][index][0] != '\0'&&strcmp(major, majors[collegeIndex][index]) != 0; index++);
+    return index;
+}

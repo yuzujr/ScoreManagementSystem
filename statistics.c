@@ -12,7 +12,7 @@ int CntNum(stu_list* head)
 
     if (head->next == NULL || head == NULL)
     {
-        return -1;
+        return 0;
     }
     else
     {

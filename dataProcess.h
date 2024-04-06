@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <malloc.h>
 #include "student.h"
+#include "globalVar.h"
 
 extern int isStudent;
 extern int lineNumber;
@@ -23,5 +24,11 @@ int changePasswdTo(char *newPasswd);
 void moveToLineStart(FILE *pf);
 //读入登录的学生数据，并返回他的指针
 Student *loadSingleStudent();
+//更新单科绩点
+double updateCredit(double grade);
+//查找学院索引
+int findCollegeIndex(const char *college);
+//查找专业索引
+int findMajorIndex(int collegeIndex, const char *major);
 
 #endif // DATAPROCESS_H

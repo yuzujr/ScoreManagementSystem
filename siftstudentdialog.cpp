@@ -1,8 +1,6 @@
 #include "siftstudentdialog.h"
 #include "ui_siftstudentdialog.h"
 
-//TODO:当前筛选显示，筛选界面翻页
-
 SiftStudentDialog::SiftStudentDialog(QWidget *parent, stu_list *head, char course[], char college[]) :
     QDialog(parent),
     ui(new Ui::SiftStudentDialog) {

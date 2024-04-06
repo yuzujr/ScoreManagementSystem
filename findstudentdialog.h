@@ -17,8 +17,9 @@ class FindStudentDialog : public QDialog {
     Q_OBJECT
 
   public:
-    explicit FindStudentDialog(QWidget *parent = nullptr, stu_list *studentList = nullptr);
+    explicit FindStudentDialog(QWidget *parent = nullptr, stu_list *studentList = nullptr, char course[] = nullptr);
     ~FindStudentDialog();
+    char m_course[100];
 
   private:
     Ui::FindStudentDialog *ui;

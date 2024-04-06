@@ -2,13 +2,20 @@
 #include "ui_findstudentdialog.h"
 #include "globalVar.h"
 
-FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList) :
+FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList, char course[]) :
     QDialog(parent),
     ui(new Ui::FindStudentDialog) {
     ui->setupUi(this);
-    this->ui->lineEdit->setEnabled(false);//选择前禁用
-    QRegularExpression regExp("\\d{0,100}"); // 使用正则表达式限制输入为数字
+    if (course != nullptr) {
+        strcpy(m_course, course);
+    }
+
+    //选择前禁用
+    this->ui->lineEdit->setEnabled(false);
+    // 使用正则表达式限制输入为数字
+    QRegularExpression regExp("\\d{0,100}");
     QValidator *validator = new QRegularExpressionValidator(regExp, this);
+    //设置只能选择一种查找方式
     connect(ui->numberRadioButton, &QRadioButton::toggled, [ = ]() {
         ui->lineEdit->clear();
         ui->lineEdit->setValidator(validator);
@@ -33,12 +40,21 @@ FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList) :
             QMessageBox::information(this, "查找失败", "未找到指定学生");
             return;
         }
-        AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true);
-        retStudentDialog->setWindowTitle("查找学生");
-        retStudentDialog->setModal(true);
-        retStudentDialog->findCnt = ret;
-        retStudentDialog->setStudent(0);
-        retStudentDialog->show();
+        if (isAdmin) { //管理员端：修改学生信息
+            AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true);
+            retStudentDialog->setWindowTitle("查找学生");
+            retStudentDialog->setModal(true);
+            retStudentDialog->findCnt = ret;
+            retStudentDialog->setStudent(0);
+            retStudentDialog->show();
+        } else { //教师端：修改成绩
+            AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true, m_course);
+            retStudentDialog->setWindowTitle("查找学生");
+            retStudentDialog->setModal(true);
+            retStudentDialog->findCnt = ret;
+            retStudentDialog->setStudent(0);
+            retStudentDialog->show();
+        }
     });
     //返回
     connect(ui->pushButton_2, &QPushButton::clicked, [ = ]() {

@@ -9,6 +9,7 @@
 #include "student.h"
 #include "student-grademanager.c"
 #include "Worker.h"
+#include "dataProcess.h"
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
@@ -18,11 +19,6 @@
 #include <QFont>
 #include <QShortcut>
 #include <QFileDialog>
-
-//TODO：1.修改一下日期的样式，完成奖项、论文编辑操作，完成新建学生操作
-//2.查找->修改（基于新建学生窗口）、删除（验证密码）
-//3.成绩总览（基本信息+GPA；ctrl+f快速查找->查看详细信息）
-//4.实现教师层级...
 
 //为了延长该变量的生命周期，将它设置为全局变量
 extern int currentPage;//当前页数
@@ -78,16 +74,9 @@ AdminWindow::AdminWindow(QWidget *parent)
         moveToLineStart(workerFileptr);
         strcpy(m_course, worker.teachingCourse);
         stu_list *listHead;
-        if (!worker.m_isAdmin) {
-            stu_list *allList = build();
-            load_data(allList);
-            find_stu_college(allList, worker.stu_college);
-            listHead = build_find_result();
-            delete[] allList;
-        } else {
-            listHead = build();
-            load_data(listHead);
-        }
+        listHead = build();
+        load_data(listHead);
+        qDebug() << listHead->m_stu.stu_name;
         //测试输出
         // stu_list *p = listHead->next;
         // while (p != NULL) {
@@ -107,6 +96,8 @@ AdminWindow::AdminWindow(QWidget *parent)
 
         //增加学生(Admin)
         myPushButton *addStudentBtn = new myPushButton(":/btn.png");
+        //查找学生(Worker)
+        myPushButton *inquireStudentBtn = new myPushButton(":/btn.png");
         if (worker.m_isAdmin) {
             addStudentBtn->setParent(this);
             addStudentBtn->setText("增加学生");
@@ -126,8 +117,19 @@ AdminWindow::AdminWindow(QWidget *parent)
             });
         } else {
             delete addStudentBtn;
+            //查找学生(Worker)
+            inquireStudentBtn->setParent(this);
+            inquireStudentBtn->setText("查找学生");
+            inquireStudentBtn->resize(200, 50);
+            inquireStudentBtn->move((this->width() - inquireStudentBtn->width()) / 2, 100);
+            inquireStudentBtn->show();
+            connect(inquireStudentBtn, &myPushButton::clicked, [ = ]() {
+                FindStudentDialog *findStudentDialog = new FindStudentDialog(this, listHead, m_course);
+                findStudentDialog->move(this->x() + (this->width() - findStudentDialog->width()) / 2, this->y() + 100);
+                findStudentDialog->setModal(1);
+                findStudentDialog->show();
+            });
         }
-
         //查找学生(Admin)
         myPushButton *searchStudentBtn = new myPushButton(":/btn.png");
         //导入成绩(Worker)
@@ -155,17 +157,13 @@ AdminWindow::AdminWindow(QWidget *parent)
             connect(importGradesBtn, &myPushButton::clicked, [ = ]() {
                 int courseIndex = 0;
                 for (; strcmp(allCourses[courseIndex], worker.teachingCourse) != 0; courseIndex++);
-                QString fileName = QFileDialog::getOpenFileName(nullptr, "选择文件", "", "文本文件 (*.txt)");
+                QString fileName = QFileDialog::getOpenFileName(this, "选择文件", "", "文本文件 (*.txt)");
                 if (!fileName.isEmpty()) {
                     int addNumber = TxTtoList(listHead, courseIndex, fileName.toUtf8().data());
                     QMessageBox::information(this, "提示", "成功导入" + QString::number(addNumber) + "条成绩！");
-                    qDebug() << courseIndex;
-                } else {
-                    return;
                 }
             });
         }
-
         //3.成绩总览
         myPushButton *scoreOverviewBtn = new myPushButton(":/btn.png");
         scoreOverviewBtn->setParent(this);
@@ -184,20 +182,6 @@ AdminWindow::AdminWindow(QWidget *parent)
         table->NonePixmap.load(":/None.png");
         //数据
         int studentNumber = CntNum(listHead);//学生总数
-        if (!isAdmin) {
-            studentNumber = 0;
-            stu_list *tail = listHead->next;
-            while (tail != NULL) {
-                if (isStudentValid(tail) != -1) {
-                    studentNumber++;
-                    tail = tail->next;
-                } else {
-                    stu_list *tmp = tail;
-                    tail = tail->next;
-                    delete_stu(tmp);
-                }
-            }
-        }
         const int pageNumber = (studentNumber + 10 - 1) / 10;//总页数
         /*第i页  总页数 j  跳转：k*/
         QLabel *info = new QLabel("第" + QString::number(currentPage) + "页" + "  总页数 " + QString::number(
@@ -240,7 +224,6 @@ AdminWindow::AdminWindow(QWidget *parent)
         connect(table, &GPATable::unSift, [ = ]() {
             paginationConnect(table, info, left10Btn, left1Btn, right1Btn, right10Btn, pageNumberEdit, listHead);
         });
-
         //4.修改密码
         myPushButton *changePasswdBtn = new myPushButton(":/btn.png");
         changePasswdBtn->setParent(this);
@@ -277,6 +260,7 @@ AdminWindow::AdminWindow(QWidget *parent)
                 searchStudentBtn->hide();
             } else {
                 importGradesBtn->hide();
+                inquireStudentBtn->hide();
             }
             scoreOverviewBtn->hide();
             changePasswdBtn->hide();
@@ -300,6 +284,7 @@ AdminWindow::AdminWindow(QWidget *parent)
                 searchStudentBtn->show();
             } else {
                 importGradesBtn->show();
+                inquireStudentBtn->show();
             }
             scoreOverviewBtn->show();
             changePasswdBtn->show();
@@ -323,18 +308,6 @@ void AdminWindow::paginationConnect(GPATable *table, QLabel *info, myPushButton 
     int studentNumber = 0; //学生总数
     if (listHead != NULL) {
         studentNumber = CntNum(listHead);
-    }
-    if (!isAdmin) {
-        studentNumber = 0;
-        if (listHead != NULL) {
-            stu_list *tail = listHead->next;
-            while (tail != NULL) {
-                if (isStudentValid(tail) != -1) {
-                    studentNumber++;
-                    tail = tail->next;
-                }
-            }
-        }
     }
     const int pageNumber = (studentNumber + 10 - 1) / 10;//总页数
     //更新ui
@@ -453,18 +426,99 @@ int AdminWindow::TxTtoList(stu_list *phead, int MKnum, char fileName[]) {
                 }
                 p = p->next;
             }
+            if (number == 0) {
+                continue;
+            }
             int i = 0;
             for (i = 0; i < find_result[0]->m_stu.stu_course_num; i++) {
                 if (find_result[0]->m_stu.stu_course_grade[i][0] == MKnum) {
                     find_result[0]->m_stu.stu_course_grade[i][1] = mark;
+                    find_result[0]->m_stu.stu_course_grade[i][2] = updateCredit(mark);
+                    Calculate(&find_result[0]->m_stu);
                     addNumber++;
                 }
             }
-
         }
         save_data(phead);
         return addNumber;
     }
+}
+
+void AdminWindow::Calculate(Student *a) {
+    double gpa = 0;
+    double sum = 0; //课程绩点影响的gpa计算记录
+    double max;//取各奖项中贡献（不超过0.40）（不考虑其他项加分）
+
+    float sum_Young = 0;//暂时记录总学分
+    for (int i = 0; i < a->stu_course_num; i++) {
+        sum_Young += credits[(int)a->stu_course_grade[i][0]];
+    }
+    for (int i = 0; i < a->stu_course_num; i++) {
+        double g = a->stu_course_grade[i][1];//暂时记录该项成绩
+        //分段记录绩点并计算gpa
+        if (g >= 90) {
+            a->stu_course_grade[i][2] = 4.0;
+            sum += 4.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 85 && g < 90) {
+            a->stu_course_grade[i][2] = 3.7;
+            sum += 3.7 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 82 && g < 85) {
+            a->stu_course_grade[i][2] = 3.3;
+            sum += 3.3 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 78 && g < 82) {
+            a->stu_course_grade[i][2] = 3.0;
+            sum += 3.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 75 && g < 78) {
+            a->stu_course_grade[i][2] = 2.7;
+            sum += 2.7 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 72 && g < 75) {
+            a->stu_course_grade[i][2] = 2.3;
+            sum += 2.3 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 68 && g < 72) {
+            a->stu_course_grade[i][2] = 2.0;
+            sum += 2.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 64 && g < 68) {
+            a->stu_course_grade[i][2] = 1.5;
+            sum += 1.5 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 60 && g < 64) {
+            a->stu_course_grade[i][2] = 1.0;
+            sum += 1.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else {
+            a->stu_course_grade[i][2] = 0.0;
+            continue;
+        }
+    }
+    gpa = sum / sum_Young;//加权平均计算gpa（课程部分）
+    double credit;//总额外加分
+    double credit1 = 0.00; //比较出获奖中加分最多的作为该类最终加分
+    for (int i = 0; i < a->stu_award_num; i++) {
+        if (a->stu_award[i].is_extra_credit > credit) {
+            credit1 = a->stu_award[i].is_extra_credit;
+        }
+    }
+
+    double credit2 = 0.00; //比较出论文中加分最多的作为该类最终加分
+    for (int i = 0; i < a->stu_award_num; i++) {
+        if (a->stu_paper[i].paper_extra_credit > credit2) {
+            credit2 = a->stu_paper[i].paper_extra_credit;
+        }
+    }
+    if (credit1 + credit2 >= 0.4) {
+        credit = 0.40;
+    } else {
+        credit = credit1 + credit2;  //保证额外加分不超过0.4
+    }
+    gpa += credit;
+    a->stu_grade_point = gpa;
 }
 
 void AdminWindow::paintEvent(QPaintEvent *event) {

@@ -18,7 +18,7 @@ class AddStudentDialog : public QDialog {
     Q_OBJECT
 
   public:
-    explicit AddStudentDialog(QWidget *parent = nullptr, stu_list *studentList = nullptr, bool isResult = 0);
+    explicit AddStudentDialog(QWidget *parent = nullptr, stu_list *studentList = nullptr, bool isResult = 0, char course[] = nullptr);
     void paintEvent(QPaintEvent *event);
     void setStudent(int ret);//设置查找到的学生
     void editStudent(stu_list *studentList);
@@ -26,6 +26,9 @@ class AddStudentDialog : public QDialog {
     int findCnt = 0; //找到个数
     int studentIndex = 0; //显示的学生序号
     bool isStudentSelected = false; //是否已选择学生
+    char m_course[100];//课程名
+    int m_index;//课程索引
+    void Calculate(Student *a);
     ~AddStudentDialog();
 
   private:

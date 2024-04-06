@@ -22,16 +22,25 @@ class GPATable : public QWidget {
     void clearTable();
     void printTable(stu_list *head, int page);
     int isStudentValid(stu_list *student);//返回课程索引，若没有该课程返回-1
+    stu_list *sort_ascend_by_grade(stu_list *head, int gradeIndex);
+    stu_list *sort_descend_by_grade(stu_list *head, int gradeIndex);
+    double averageGrade(stu_list *head);//平均分
+    void updateStatistics();//更新统计数据
+    double passRate(stu_list *head);//及格率
+    double averageGPA(stu_list *head);//GPA平均数
+    double medianGPA();//GPA中位数
+    ~GPATable();
+
+    //属性
     QPixmap NonePixmap;
     QLabel pixmapLabel;
     QLabel *info;
+    stu_list *head;
     stu_list *findListHead = nullptr;
     bool isSifted = false;
     char m_course[100];
     char m_college[100];
-    stu_list *sort_ascend_by_grade(stu_list *head, int gradeIndex);
-    stu_list *sort_descend_by_grade(stu_list *head, int gradeIndex);
-    ~GPATable();
+    int m_index;//课程索引
 
   private:
     Ui::GPATable *ui;

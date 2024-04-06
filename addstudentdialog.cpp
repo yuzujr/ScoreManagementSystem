@@ -4,51 +4,23 @@
 #include "addpaperdialog.h"
 #include "globalVar.h"
 #include "verifypasswddialog.h"
+#include "dataProcess.h"
 
-inline int findCollegeIndex(const char *college) {
-    int index = 0;
-    for (; strcmp(college, colleges[index]) != 0; index++) {
-        // 如果 colleges 中没有找到对应的学院，返回 -1
-        if (colleges[index][0] == '\0') {
-            return -1;
-        }
-    }
-    return index;
-}
-
-inline int findMajorIndex(int collegeIndex, const char *major) {
-    int index = 0;
-    for (; strcmp(major, majors[collegeIndex][index]) != 0; index++) {
-        // 如果 majors 中没有找到对应的专业，返回 -1
-        if (majors[collegeIndex][index][0] == '\0') {
-            return -1;
-        }
-    }
-    return index;
-}
-
-AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool isResult) :
+AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool isResult, char course[]) :
     QDialog(parent),
     ui(new Ui::AddStudentDialog) {
     ui->setupUi(this);
+    if (course != nullptr) {
+        strcpy(m_course, course);
+    }
+
     //默认隐藏查找结果的按钮
     ui->pushButton->setVisible(false);
     ui->pushButton_2->setVisible(false);
     ui->label_10->setVisible(false);
     ui->editBtn->setVisible(false);
     ui->deleteBtn->setVisible(false);
-    if (isResult) { //如果是查询结果页
-        connect(ui->pushButton, &QPushButton::clicked, [ = ]() {
-            if (this->studentIndex > 0) {
-                setStudent(--studentIndex);
-            }
-        });//上一页
-        connect(ui->pushButton_2, &QPushButton::clicked, [ = ]() {
-            if (&find_result[studentIndex + 1]->m_stu != NULL) {
-                setStudent(++studentIndex);
-            }
-        });//下一页
-    }
+
     //学生初始化
     for (int i = 0; i < 100; i++) {
         newStudent.stu_award[i].award_winner_num = 0; //获奖者数量
@@ -98,6 +70,39 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             ui->courseSelect->addItem(allCourses[majorCourses[ui->collegeSelect->currentIndex()][index][i] - 1]);
         }
     });
+
+    if (isResult) { //如果是查询结果页
+        setStudent(0);
+        connect(ui->pushButton, &QPushButton::clicked, [ = ]() {
+            if (this->studentIndex > 0) {
+                setStudent(--studentIndex);
+            }
+        });//上一页
+
+        connect(ui->pushButton_2, &QPushButton::clicked, [ = ]() {
+            if (&find_result[studentIndex + 1]->m_stu != NULL) {
+                setStudent(++studentIndex);
+            }
+        });//下一页
+
+        if (!isAdmin) { //教师端UI
+            //禁用删除
+            ui->deleteBtn->setVisible(false);
+            //查找课程索引
+            int index = 0;
+            for (; index < ui->courseSelect->count() && strcmp(m_course, ui->courseSelect->itemText(index).toUtf8().data()) != 0; index++) {
+                m_index = index;
+            }
+            //课程选择设置为对应索引，并禁用
+            ui->courseSelect->setCurrentIndex(m_index);
+            ui->courseSelect->setEnabled(false);
+            ui->gradeEdit->setEnabled(false);
+        } else {
+            ui->gradeEdit->setVisible(false);
+        }
+    } else {
+        ui->gradeEdit->setVisible(false);
+    }
 
     // 学号、班级设置只能输入数字
     QRegularExpression regExp("\\d{0,100}"); // 使用正则表达式限制输入为数字
@@ -284,6 +289,7 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
         newStudent.stu_password[sizeof(newStudent.stu_password) - 1] = '\0';
         strcat(newStudent.stu_password, "jlu@");
         strcat(newStudent.stu_password, newStudent.stu_number);
+        Calculate(&newStudent);
         insert_stu(studentList, &newStudent);
         save_data(studentList);
         emit addStudentSuccessful();
@@ -298,7 +304,9 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             ui->okBtn->setVisible(false);
             ui->label_10->setVisible(false);
             ui->editBtn->setEnabled(true);
-            ui->deleteBtn->setEnabled(true);
+            if (isAdmin) {
+                ui->deleteBtn->setEnabled(true);
+            }
         });
         //重连cancelBtn
         disconnect(ui->cancelBtn, nullptr, nullptr, nullptr);
@@ -306,6 +314,7 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             emit addStudentCanceled();
             deleteLater(); // 删除对话框自身
         });
+        //删除
         connect(ui->deleteBtn, &QPushButton::clicked, [ = ]() {
             VerifyPasswdDialog *verifyDialog = new VerifyPasswdDialog(this);
             verifyDialog->setModal(true);
@@ -318,26 +327,31 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
                 this->close();
                 deleteLater();
             });
-        });//删除
+        });
+        //编辑
         connect(ui->editBtn, &QPushButton::clicked, [ = ]() {
-            ui->nameEdit->setEnabled(true);
-            ui->numberEdit->setEnabled(true);
-            ui->classEdit->setEnabled(true);
-            ui->collegeSelect->setEnabled(true);
-            ui->majorSelect->setEnabled(true);
-            ui->courseSelect->setEnabled(true);
-            ui->awardSelect->setEnabled(true);
-            ui->paperSelect->setEnabled(true);
-            ui->addAwardBtn->setEnabled(true);
-            ui->deleteAwardBtn->setEnabled(true);
-            ui->editAwardBtn->setEnabled(true);
-            ui->addPaperBtn->setEnabled(true);
-            ui->deletePaperBtn->setEnabled(true);
-            ui->editPaperBtn->setEnabled(true);
-            ui->deleteBtn->setEnabled(true);
             ui->editBtn->setEnabled(true);
             ui->cancelBtn->setText("取消");
             ui->okBtn->setVisible(true);
+            if (isAdmin) {
+                ui->nameEdit->setEnabled(true);
+                ui->numberEdit->setEnabled(true);
+                ui->classEdit->setEnabled(true);
+                ui->collegeSelect->setEnabled(true);
+                ui->majorSelect->setEnabled(true);
+                ui->courseSelect->setEnabled(true);
+                ui->awardSelect->setEnabled(true);
+                ui->paperSelect->setEnabled(true);
+                ui->addAwardBtn->setEnabled(true);
+                ui->deleteAwardBtn->setEnabled(true);
+                ui->editAwardBtn->setEnabled(true);
+                ui->addPaperBtn->setEnabled(true);
+                ui->deletePaperBtn->setEnabled(true);
+                ui->editPaperBtn->setEnabled(true);
+                ui->deleteBtn->setEnabled(true);
+            } else {
+                ui->gradeEdit->setEnabled(true);
+            }
             //重连cancelBtn
             disconnect(ui->cancelBtn, nullptr, nullptr, nullptr);
             connect(ui->cancelBtn, &QPushButton::clicked, [ = ]() {
@@ -356,7 +370,7 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
             connect(ui->okBtn, &QPushButton::clicked, [ = ]() {
                 editStudent(studentList);
             });
-        });//编辑
+        });
     }
 }
 
@@ -372,7 +386,9 @@ void AddStudentDialog::setStudent(int studentIndex) {
         ui->pushButton_2->setVisible(true);
         ui->label_10->setVisible(true);
         ui->editBtn->setVisible(true);
-        ui->deleteBtn->setVisible(true);
+        if (isAdmin) {
+            ui->deleteBtn->setVisible(true);
+        }
         ui->nameEdit->setEnabled(false);
         ui->numberEdit->setEnabled(false);
         ui->classEdit->setEnabled(false);
@@ -405,6 +421,17 @@ void AddStudentDialog::setStudent(int studentIndex) {
     int collegeIndex = findCollegeIndex((&find_result[studentIndex]->m_stu)->stu_college);
     ui->collegeSelect->setCurrentIndex(collegeIndex);
     ui->majorSelect->setCurrentIndex(findMajorIndex(collegeIndex, (&find_result[studentIndex]->m_stu)->stu_major));
+    if (!isAdmin) {//保证切换后仍是特定课程
+        //查找课程索引
+        int index = 0;
+        for (; index < ui->courseSelect->count() && strcmp(m_course, ui->courseSelect->itemText(index).toUtf8().data()) != 0; index++);
+        m_index = index;
+        //课程选择设置为对应索引，并禁用
+        ui->courseSelect->setCurrentIndex(m_index);
+        ui->courseSelect->setEnabled(false);
+        //填入成绩
+        ui->gradeEdit->setText(QString::number(newStudent.stu_course_grade[m_index][1]));
+    }
     for (int i = 0; newStudent.stu_award[i].competition_level != NULL; i++) {
         ui->awardSelect->addItem(newStudent.stu_award[i].award_name);
     }
@@ -449,9 +476,12 @@ void AddStudentDialog::editStudent(stu_list *studentList) {
     //所选课程编号
     int courseNum = 0;
     for (; majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] != 0 && courseNum < MAX_COURSES_PER_MAJOR; courseNum++) {
-        newStudent.stu_course_grade[courseNum][0] = majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum] - 1;
+        newStudent.stu_course_grade[courseNum][0] = majorCourses[ui->collegeSelect->currentIndex()][ui->majorSelect->currentIndex()][courseNum];
     }
     newStudent.stu_course_num = courseNum;
+    if (!isAdmin) {
+        newStudent.stu_course_grade[m_index][1] = ui->gradeEdit->text().toDouble();
+    }
     strcpy(confirmedStudent->m_stu.stu_number, newStudent.stu_number);
     strcpy(confirmedStudent->m_stu.stu_password, newStudent.stu_password);
     strcpy(confirmedStudent->m_stu.stu_name, newStudent.stu_name);
@@ -473,12 +503,96 @@ void AddStudentDialog::editStudent(stu_list *studentList) {
     }
     confirmedStudent->m_stu.stu_grade_point = newStudent.stu_grade_point;
     confirmedStudent->m_stu.stu_classnum = newStudent.stu_classnum;
+    //读入新成绩
+    if (!isAdmin) {
+        confirmedStudent->m_stu.stu_course_grade[m_index][1] = newStudent.stu_course_grade[m_index][1];
+        confirmedStudent->m_stu.stu_course_grade[m_index][2] = updateCredit(confirmedStudent->m_stu.stu_course_grade[m_index][1]);
+    }
+    //更新GPA
+    Calculate(&confirmedStudent->m_stu);
     //替换原学生
     save_data(studentList);//保存数据
     load_data(studentList);//加载数据
     this->close();
     this->deleteLater();
     QMessageBox::information(this, "提示", "修改成功！");
+}
+
+void AddStudentDialog::Calculate(Student *a) {
+    double gpa = 0;
+    double sum = 0; //课程绩点影响的gpa计算记录
+    double max;//取各奖项中贡献（不超过0.40）（不考虑其他项加分）
+
+    float sum_Young = 0;//暂时记录总学分
+    for (int i = 0; i < a->stu_course_num; i++) {
+        sum_Young += credits[(int)a->stu_course_grade[i][0]];
+    }
+    for (int i = 0; i < a->stu_course_num; i++) {
+        double g = a->stu_course_grade[i][1];//暂时记录该项成绩
+        //分段记录绩点并计算gpa
+        if (g >= 90) {
+            a->stu_course_grade[i][2] = 4.0;
+            sum += 4.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 85 && g < 90) {
+            a->stu_course_grade[i][2] = 3.7;
+            sum += 3.7 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 82 && g < 85) {
+            a->stu_course_grade[i][2] = 3.3;
+            sum += 3.3 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 78 && g < 82) {
+            a->stu_course_grade[i][2] = 3.0;
+            sum += 3.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 75 && g < 78) {
+            a->stu_course_grade[i][2] = 2.7;
+            sum += 2.7 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 72 && g < 75) {
+            a->stu_course_grade[i][2] = 2.3;
+            sum += 2.3 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 68 && g < 72) {
+            a->stu_course_grade[i][2] = 2.0;
+            sum += 2.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 64 && g < 68) {
+            a->stu_course_grade[i][2] = 1.5;
+            sum += 1.5 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else if (g >= 60 && g < 64) {
+            a->stu_course_grade[i][2] = 1.0;
+            sum += 1.0 * credits[(int)a->stu_course_grade[i][0]];
+            continue;
+        } else {
+            a->stu_course_grade[i][2] = 0.0;
+            continue;
+        }
+    }
+    gpa = sum / sum_Young;//加权平均计算gpa（课程部分）
+    double credit;//总额外加分
+    double credit1 = 0.00; //比较出获奖中加分最多的作为该类最终加分
+    for (int i = 0; i < a->stu_award_num; i++) {
+        if (a->stu_award[i].is_extra_credit > credit) {
+            credit1 = a->stu_award[i].is_extra_credit;
+        }
+    }
+
+    double credit2 = 0.00; //比较出论文中加分最多的作为该类最终加分
+    for (int i = 0; i < a->stu_award_num; i++) {
+        if (a->stu_paper[i].paper_extra_credit > credit2) {
+            credit2 = a->stu_paper[i].paper_extra_credit;
+        }
+    }
+    if (credit1 + credit2 >= 0.4) {
+        credit = 0.40;
+    } else {
+        credit = credit1 + credit2;  //保证额外加分不超过0.4
+    }
+    gpa += credit;
+    a->stu_grade_point = gpa;
 }
 
 AddStudentDialog::~AddStudentDialog() {
