@@ -8,14 +8,6 @@
 #include "student.h"
 #include "globalVar.h"
 
-extern int isStudent;
-extern int lineNumber;
-extern FILE *stuFileptr;
-extern FILE *workerFileptr;
-extern char *STU_FILE;
-extern char *ADMIN_FILE;
-extern Student *student;
-
 // 修改文件中的某一行
 int modify_file(const char *filename, const char *new_content);
 //修改密码

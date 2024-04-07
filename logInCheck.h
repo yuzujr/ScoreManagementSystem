@@ -3,7 +3,9 @@
 
 
 #include <stdio.h>
+//学生登录
 int stuLogInCheck(char *account, char *passwd);
+//教师登录
 int adminLogInCheck(char *account, char *passwd);
 
 

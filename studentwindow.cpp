@@ -126,11 +126,18 @@ StudentWindow::StudentWindow(QWidget *parent)
         backBtn->move(this->width() - backBtn->width(), this->height() - backBtn->height());
 
         //数据
-        const int courseNumber = student->stu_course_num;//总课程数
+        int realNumber = 0;
+        for (int i = 0; i < student->stu_course_num; i++) {
+            if (student->stu_course_grade[i][1] != 0) {
+                realNumber++;
+            }//若有不为0的成绩，成绩表不为空
+        }
+        const int courseNumber = realNumber;//总课程数
         const int pageNumber = (courseNumber + 10 - 1) / 10;//总页数
 
         /*x-y 总记录数 z  总页数 j  跳转：k*/
-        QLabel *info = new QLabel(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10) + " 总记录数 " + QString::number(
+        QLabel *info = new QLabel(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                student->stu_course_num) + " 总记录数 " + QString::number(
                 courseNumber) + "  总页数 " + QString::number(
                 pageNumber) + "  跳转：", this);
         info->setFont(font);
@@ -138,7 +145,8 @@ StudentWindow::StudentWindow(QWidget *parent)
         info->move(190, 557);
 
         //变量长度
-        int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber));
+        int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                student->stu_course_num) + countDigits(courseNumber) + countDigits(pageNumber));
         /*跳转文本框*/
         QLineEdit *pageNumberEdit = new QLineEdit(this);
         pageNumberEdit->setFont(font);
@@ -164,10 +172,12 @@ StudentWindow::StudentWindow(QWidget *parent)
                 pageNumberEdit->setText(QString::number(newPageNumber));
                 currentPage = newPageNumber;
                 table->printTable(student, newPageNumber);
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber));
+                int *varLenth = new int(countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + countDigits(courseNumber) + countDigits(pageNumber));
                 pageNumberEdit->move(455 + (*varLenth - 6) * 5, 550); //每多一个数字，右移5个像素
             }
         });
@@ -181,19 +191,23 @@ StudentWindow::StudentWindow(QWidget *parent)
             else if (currentPage - 10 < 1) {
                 table->printTable(student, 1);
                 currentPage = 1;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             } //左边界
             else {
                 table->printTable(student, currentPage - 10);
                 currentPage -= 10;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             }
         });
@@ -207,10 +221,12 @@ StudentWindow::StudentWindow(QWidget *parent)
             else {
                 table->printTable(student, currentPage - 1);
                 currentPage -= 1;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             }
         });
@@ -224,10 +240,12 @@ StudentWindow::StudentWindow(QWidget *parent)
             else {
                 table->printTable(student, currentPage + 1);
                 currentPage += 1;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             }
         });
@@ -241,19 +259,23 @@ StudentWindow::StudentWindow(QWidget *parent)
             else if (currentPage + 10 > pageNumber) {
                 table->printTable(student, pageNumber);
                 currentPage = pageNumber;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             } //右边界
             else {
                 table->printTable(student, currentPage + 10);
                 currentPage += 10;
-                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(courseNumber) + " 总记录数 " + QString::number(
+                info->setText(QString::number((currentPage - 1) * 10 + 1) + "-" + QString::number(currentPage * 10 < student->stu_course_num ? currentPage * 10 :
+                        student->stu_course_num) + " 总记录数 " + QString::number(
                         courseNumber) + "  总页数 " + QString::number(
                         pageNumber) + "  跳转：");
-                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10) + countDigits(courseNumber) + countDigits(pageNumber);
+                *varLenth = countDigits((currentPage - 1) * 10 + 1) + countDigits(currentPage * 10 < student->stu_course_num ? currentPage * 10 : student->stu_course_num) +
+                    countDigits(courseNumber) + countDigits(pageNumber);
                 pageNumberEdit->move(455 + (*varLenth - 6) * 6, 550); //每多一个数字，右移6个像素
             }
         });

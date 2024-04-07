@@ -20,15 +20,24 @@ class GPATable : public QWidget {
     explicit GPATable(QWidget *parent = nullptr, stu_list *head = nullptr, char course[] = nullptr, char college[] = nullptr);
     // 清空表格内容
     void clearTable();
+    //打印表格内容
     void printTable(stu_list *head, int page);
+    //判断学生是否有对应课程
     int isStudentValid(stu_list *student);//返回课程索引，若没有该课程返回-1
+    //成绩升序
     stu_list *sort_ascend_by_grade(stu_list *head, int gradeIndex);
+    //成绩降序
     stu_list *sort_descend_by_grade(stu_list *head, int gradeIndex);
-    double averageGrade(stu_list *head);//平均分
-    void updateStatistics();//更新统计数据
-    double passRate(stu_list *head);//及格率
-    double averageGPA(stu_list *head);//GPA平均数
-    double medianGPA();//GPA中位数
+    //平均分
+    double averageGrade(stu_list *head);
+    //更新统计数据
+    void updateStatistics();
+    //及格率
+    double passRate(stu_list *head);
+    //GPA平均数
+    double averageGPA(stu_list *head);
+    //GPA中位数
+    double medianGPA();
     ~GPATable();
 
     //属性

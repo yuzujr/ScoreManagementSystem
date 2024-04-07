@@ -1,8 +1,11 @@
 #pragma once
 #ifndef WORKER_H
 #define WORKER_H
+
+
 #include "globalVar.h"
 #include "dataProcess.h"
+
 typedef struct Worker {
     bool m_isAdmin;
 
@@ -14,5 +17,6 @@ typedef struct Worker {
 
     char teachingCourse[100];//课程名称
 } Worker;
+
 
 #endif // WORKER_H

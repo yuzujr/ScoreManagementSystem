@@ -240,6 +240,7 @@ int findCollegeIndex(const char *college) {
     for (; colleges[index][0] == '\0'&&strcmp(college, colleges[index]) != 0; index++);
     return index;
 }
+
 //查找专业索引
 int findMajorIndex(int collegeIndex, const char *major) {
     int index = 0;

@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)//界面大小：800*600
 
     QWidget::setTabOrder(studentEnterBtn, adminEnterBtn);
     QWidget::setTabOrder(adminEnterBtn, exitBtn);
+
     //学生窗口
     connect(studentEnterBtn, &myPushButton::clicked, [ = ]() {
         StudentWindow *studentWindow = new StudentWindow(this);
@@ -93,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)//界面大小：800*600
         });//从管理员界面直接退出
     });
 }
+
 void MainWindow::paintEvent(QPaintEvent *event) {
     //创建主界面
     QPainter painter(this);

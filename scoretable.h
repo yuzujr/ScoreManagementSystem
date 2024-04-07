@@ -17,6 +17,7 @@ class ScoreTable : public QWidget {
     explicit ScoreTable(QWidget *parent = nullptr);
     // 清空表格内容
     void clearTable();
+    //打印表格内容
     void printTable(Student *stu, int page);
     ~ScoreTable();
     QPixmap NonePixmap;

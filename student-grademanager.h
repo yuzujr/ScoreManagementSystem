@@ -4,7 +4,7 @@
 #include "student.h"
 
 
-//学生名单
+//学生链表
 struct stu_list {
     struct Student m_stu;
     struct stu_list *next;

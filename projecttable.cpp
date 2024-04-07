@@ -39,6 +39,7 @@ void ProjectTable::clearTable() {
         }
     }
 }
+
 void ProjectTable::printPaper(Student *stu, int page) {
     if (stu->stu_paper_num == 0) {
         this->ui->tableWidget->setRowCount(0);
@@ -101,6 +102,7 @@ void ProjectTable::printPaper(Student *stu, int page) {
     //论文加分
     ui->tableWidget->item(4, 0)->setText(QString::number(stu->stu_paper[page - 1].paper_extra_credit));
 }
+
 void ProjectTable::printAward(Student *stu, int page) {
     if (stu->stu_award_num == 0) {
         this->ui->tableWidget->setRowCount(0);

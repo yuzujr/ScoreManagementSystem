@@ -17,9 +17,12 @@ class AdminWindow : public QMainWindow {
         QLineEdit *pageNumberEdit, stu_list *listHead);
     // 更新界面函数
     void updateUI(int currentPage, int pageNumber, QLineEdit *pageNumberEdit, QLabel *info);
+    //判断学生是否有对应课程
     int isStudentValid(stu_list *student);
     char m_course[100];
+    //导入成绩
     int TxTtoList(stu_list *phead, int MKnum, char fileName[]);
+    //计算GPA
     void Calculate(Student *a);
     ~AdminWindow();
   private:

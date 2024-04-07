@@ -19,6 +19,7 @@ class SiftStudentDialog : public QDialog {
   public:
     explicit SiftStudentDialog(QWidget *parent = nullptr, stu_list *head = nullptr, char course[] = nullptr, char college[] = nullptr);
     ~SiftStudentDialog();
+    //查找结果链表
     stu_list *findListHead;
 
   private:

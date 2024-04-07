@@ -14,8 +14,10 @@ class LogInWidget : public QWidget {
 
   public:
     explicit LogInWidget(QWidget *parent = nullptr);
+    //改变UI
     void changeClient(QString);
     void changeAccount(QString);
+    //处理查找结果
     bool checkResult(int);
     ~LogInWidget();
 

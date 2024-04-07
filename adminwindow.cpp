@@ -73,26 +73,10 @@ AdminWindow::AdminWindow(QWidget *parent)
         }
         moveToLineStart(workerFileptr);
         strcpy(m_course, worker.teachingCourse);
+        //初始化链表
         stu_list *listHead;
         listHead = build();
         load_data(listHead);
-        qDebug() << listHead->m_stu.stu_name;
-        //测试输出
-        // stu_list *p = listHead->next;
-        // while (p != NULL) {
-        //     qDebug("姓名：%s\n", p->m_stu.stu_name);
-        //     qDebug("学号：%s  密码：%s\n", p->m_stu.stu_number, p->m_stu.stu_password);
-        //     qDebug("学院：%s  专业：%s  绩点：%.1lf\n", p->m_stu.stu_college, p->m_stu.stu_major, p->m_stu.stu_grade_point);
-        //     qDebug("课程及其成绩：\n");
-        //     for (int i = 0; i < p->m_stu.stu_course_num; i++) {
-        //         qDebug("课程%d：%s  成绩：%.1lf\n", i + 1, allCourses[(int)p->m_stu.stu_course_grade[i][0]], p->m_stu.stu_course_grade[i][1]);
-        //     }
-        //     qDebug("获奖信息：\n");
-        //     for (int i = 0; i < p->m_stu.stu_award_num; i++) {
-        //         qDebug("奖项%d：%s\n", i + 1, p->m_stu.stu_award[i]);
-        //     }
-        //     p = p->next;
-        // }
 
         //增加学生(Admin)
         myPushButton *addStudentBtn = new myPushButton(":/btn.png");

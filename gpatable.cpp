@@ -29,7 +29,6 @@ GPATable::GPATable(QWidget *parent, stu_list *head, char course[], char college[
         ui->sortSelect->setItemText(1, "成绩降序");
         ui->label->setText("《" + QString::fromUtf8(course) + "》的所有成绩");
     }
-    qDebug() << "9";
     //空表提示
     info = new QLabel("这里还什么都没有哦", this->ui->scoreTable);
     //筛选
@@ -82,7 +81,6 @@ GPATable::GPATable(QWidget *parent, stu_list *head, char course[], char college[
             emit Sifted();
         });//未找到
     });
-    qDebug() << "10";
     //排序
     connect(ui->sortSelect, QOverload<int>::of(&QComboBox::currentIndexChanged), [ = ](int index) {
         switch (index) {
@@ -126,7 +124,6 @@ GPATable::GPATable(QWidget *parent, stu_list *head, char course[], char college[
                 break;
         }
     });
-    qDebug() << "10";
     //快捷查找(Admin)
     if (isAdmin) {
         QShortcut *shortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this);
@@ -193,18 +190,8 @@ void GPATable::printTable(stu_list *head, int page) {
     clearTable();//打印前先清空表格
     pixmapLabel.hide();
     info->hide();
-    qDebug() << head->m_stu.stu_name;
     int startIndex = (page - 1) * 10;//开始读取的索引值
     int studentNumber = CntNum(head);
-    // if (!isAdmin) {
-    //     studentNumber = 0;
-    //     stu_list *tail = head->next;
-    //     for (; tail != NULL; tail = tail->next) {
-    //         if (isStudentValid(tail) != -1) {
-    //             studentNumber++;
-    //         }
-    //     }
-    // }
     //链表为空
     if (head->next == NULL) {
         this->ui->scoreTable->setRowCount(0);
@@ -261,7 +248,6 @@ void GPATable::printTable(stu_list *head, int page) {
         for (int row = 0; page < pageNumber && row < 10 || page == pageNumber
             && row < studentNumber - 10 * (page - 1)/*防止打印多余信息*/; ++row, startStudent = startStudent->next) {
             int ret = isStudentValid(startStudent);
-            qDebug() << ret;
             //学生姓名
             QTableWidgetItem *studentNameItem = new QTableWidgetItem(QString::fromUtf8(startStudent->m_stu.stu_name));
             studentNameItem->setTextAlignment(Qt::AlignCenter);
