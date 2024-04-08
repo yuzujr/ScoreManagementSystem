@@ -421,10 +421,10 @@ void save_data(stu_list* head)
     while (p != NULL)
     {
         fprintf(fp, "%s %s %s %s %s", p->m_stu.stu_number, p->m_stu.stu_password, p->m_stu.stu_name, p->m_stu.stu_college, p->m_stu.stu_major);
-        fprintf(fp, " %d %lf %d %d %d", p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num,p->m_stu.stu_paper_num);
+        fprintf(fp, " %d %g %d %d %d", p->m_stu.stu_classnum, p->m_stu.stu_grade_point, p->m_stu.stu_course_num, p->m_stu.stu_award_num,p->m_stu.stu_paper_num);
         for (int i = 0; i < p->m_stu.stu_course_num; i++)
         {
-            fprintf(fp, " %lf %lf %lf", p->m_stu.stu_course_grade[i][0], p->m_stu.stu_course_grade[i][1],p->m_stu.stu_course_grade[i][2]);
+            fprintf(fp, " %g %g %g", p->m_stu.stu_course_grade[i][0], p->m_stu.stu_course_grade[i][1],p->m_stu.stu_course_grade[i][2]);
         }
 
         //获奖项目
@@ -437,7 +437,7 @@ void save_data(stu_list* head)
                 fprintf(fp, " %s", p->m_stu.stu_award[i].award_allwinner[j]);
             }
 
-            fprintf(fp, " %lf %c %s", p->m_stu.stu_award[i].is_extra_credit, p->m_stu.stu_award[i].competition_level, p->m_stu.stu_award[i].award_time);
+            fprintf(fp, " %g %c %s", p->m_stu.stu_award[i].is_extra_credit, p->m_stu.stu_award[i].competition_level, p->m_stu.stu_award[i].award_time);
         }
 
         //论文
@@ -450,7 +450,7 @@ void save_data(stu_list* head)
                 fprintf(fp, " %s", p->m_stu.stu_paper[i].paper_allwriter[j]);
             }
 
-            fprintf(fp, " %s %s %lf", p->m_stu.stu_paper[i].paper_periodicalname, p->m_stu.stu_paper[i].paper_time, p->m_stu.stu_paper[i].paper_extra_credit);
+            fprintf(fp, " %s %s %g", p->m_stu.stu_paper[i].paper_periodicalname, p->m_stu.stu_paper[i].paper_time, p->m_stu.stu_paper[i].paper_extra_credit);
         }
 
         fprintf(fp, "\n");

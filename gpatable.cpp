@@ -125,30 +125,28 @@ GPATable::GPATable(QWidget *parent, stu_list *head, char course[], char college[
         }
     });
     //快捷查找(Admin)
-    if (isAdmin) {
-        QShortcut *shortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this);
-        connect(shortcut, &QShortcut::activated, [ = ]() {
-            QList<QTableWidgetItem *> selectedItems = ui->scoreTable->selectedItems();
-            if (selectedItems.isEmpty()) {
-                QMessageBox::information(this, "提示", "未选中任何单元格，请重试！");
-            } else if (selectedItems.size() == 1) {
-                QTableWidgetItem *currentItem = selectedItems.first();
-                int ret = find_stu_num(head, ui->scoreTable->item(currentItem->row(), 1)->text().toUtf8().data());
-                if (ret != 0) { //找到学号对应的学生
-                    AddStudentDialog *retStudentDialog = new AddStudentDialog(this, head, true);
-                    retStudentDialog->setWindowTitle("查找学生");
-                    retStudentDialog->setModal(true);
-                    retStudentDialog->findCnt = ret;
-                    retStudentDialog->setStudent(0);
-                    retStudentDialog->show();
-                } else { //已被删除
-                    QMessageBox::information(this, "提示", "该学生可能已被删除，重新进入本界面后刷新！");
-                }
-            } else {//选中多个
-                QMessageBox::information(this, "提示", "只能选中一个单元格，请重试！");
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_F), this);
+    connect(shortcut, &QShortcut::activated, [ = ]() {
+        QList<QTableWidgetItem *> selectedItems = ui->scoreTable->selectedItems();
+        if (selectedItems.isEmpty()) {
+            QMessageBox::information(this, "提示", "未选中任何单元格，请重试！");
+        } else if (selectedItems.size() == 1) {
+            QTableWidgetItem *currentItem = selectedItems.first();
+            int ret = find_stu_num(head, ui->scoreTable->item(currentItem->row(), 1)->text().toUtf8().data());
+            if (ret != 0) { //找到学号对应的学生
+                AddStudentDialog *retStudentDialog = new AddStudentDialog(this, head, true, m_course);
+                retStudentDialog->setWindowTitle("查找学生");
+                retStudentDialog->setModal(true);
+                retStudentDialog->findCnt = ret;
+                retStudentDialog->setStudent(0);
+                retStudentDialog->show();
+            } else { //已被删除
+                QMessageBox::information(this, "提示", "该学生可能已被删除，重新进入本界面后刷新！");
             }
-        });
-    }
+        } else {//选中多个
+            QMessageBox::information(this, "提示", "只能选中一个单元格，请重试！");
+        }
+    });
     //统计信息
     if (isAdmin) { //管理员
         if (isSifted) {
@@ -188,6 +186,7 @@ void GPATable::clearTable() {
 // 添加数据到表格
 void GPATable::printTable(stu_list *head, int page) {
     clearTable();//打印前先清空表格
+    updateStatistics();//更新统计数据
     pixmapLabel.hide();
     info->hide();
     int startIndex = (page - 1) * 10;//开始读取的索引值
@@ -437,12 +436,20 @@ double GPATable::medianGPA() {
 void GPATable::updateStatistics() {
     ui->statistics->clear();
     ui->statistics->addItem("统计信息");
-    if (findListHead == nullptr) {
+    if (isSifted && findListHead == nullptr) { //筛选后为空则不统计
         return;
     }
     //统计信息
     if (isAdmin) { //管理员
-
+        if (isSifted) {
+            ui->statistics->addItem("当前人数 " + QString::number(CntNum(findListHead)));
+            ui->statistics->addItem("平均GPA " + QString::number(averageGPA(findListHead)));
+            ui->statistics->addItem("GPA中位数 " + QString::number(medianGPA()));
+        } else {
+            ui->statistics->addItem("当前人数 " + QString::number(CntNum(head)));
+            ui->statistics->addItem("平均GPA " + QString::number(averageGPA(head)));
+            ui->statistics->addItem("GPA中位数 " + QString::number(medianGPA()));
+        }
     } else {
         if (isSifted) { //已筛选
             ui->statistics->addItem("当前人数 " + QString::number(CntNum(findListHead)));

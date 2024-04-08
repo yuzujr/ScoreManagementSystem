@@ -237,7 +237,7 @@ double updateCredit(double grade) {
 //查找学院索引
 int findCollegeIndex(const char *college) {
     int index = 0;
-    for (; colleges[index][0] == '\0'&&strcmp(college, colleges[index]) != 0; index++);
+    for (; colleges[index][0] != '\0'&&strcmp(college, colleges[index]) != 0; index++);
     return index;
 }
 
