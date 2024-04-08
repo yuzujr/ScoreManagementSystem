@@ -96,8 +96,6 @@ int changePasswdTo(char* newPasswd){
     if(strlen(newPasswd)>20){
         return -4;//密码过长
     }
-    //FILE* test;
-    //test=fopen("test.txt","w");//测试文件
     //检查新密码是否合法(即不含有汉字和字符)
     if(!isPasswordValid(newPasswd)){
         return -1;//密码不合法
@@ -110,8 +108,6 @@ int changePasswdTo(char* newPasswd){
     else{
         fgets(buffer, 1000, workerFileptr);
     }
-    //fputs(buffer,test);
-    //fprintf(test,"\n");//测试,原行
     //得到修改后的行
     int passwdIndex = 0;
     int passwdLength = 0;
@@ -154,7 +150,6 @@ int changePasswdTo(char* newPasswd){
     for (int i=newsize;i<1000;i++){
         buffer[i]=NULL;
     }//删除多余字符
-    //fputs(buffer,test);//测试，修改后行
     char* fileLocation;
     if(isStudent){
         fileLocation=STU_FILE;

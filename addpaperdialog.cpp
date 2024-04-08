@@ -69,6 +69,7 @@ AddPaperDialog::AddPaperDialog(QWidget *parent) :
         strcpy(newPaper.paper_periodicalname, ui->hostEdit->text().toUtf8().data());//期刊名称
         QString allWinner = ui->winnerEdit->text();//作者
         //拆分作者
+        newPaper.writer_num = 0;
         QStringList winnners = allWinner.split("；");
         for (int i = 0; i < winnners.size(); ++i) {
             QString winnner = winnners[i];
