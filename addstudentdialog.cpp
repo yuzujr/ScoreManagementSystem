@@ -11,7 +11,6 @@ AddStudentDialog::AddStudentDialog(QWidget *parent, stu_list *studentList, bool 
     ui(new Ui::AddStudentDialog) {
     ui->setupUi(this);
     if (course != nullptr) {
-        qDebug() << "劲来了";
         strcpy(m_course, course);
     }
 
@@ -408,7 +407,6 @@ void AddStudentDialog::setStudent(int studentIndex) {
         ui->editBtn->setEnabled(false);
         ui->cancelBtn->setText("返回");
     }//先让用户选择要查找的学生
-
     newStudent = find_result[studentIndex]->m_stu;//更新newStudent
     //显示信息
     QString cntInfo = "第" + QString::number(studentIndex + 1) + "个  " + "共找到" + QString::number(findCnt) + "个";
@@ -419,26 +417,25 @@ void AddStudentDialog::setStudent(int studentIndex) {
     ui->numberEdit->setText(QString::fromUtf8(newStudent.stu_number));
     ui->classEdit->setText(QString::number(newStudent.stu_classnum));
     int collegeIndex = findCollegeIndex(newStudent.stu_college);
-    qDebug() << collegeIndex;
     ui->collegeSelect->setCurrentIndex(collegeIndex);
     ui->majorSelect->setCurrentIndex(findMajorIndex(collegeIndex, (&find_result[studentIndex]->m_stu)->stu_major));
     if (!isAdmin) {//保证切换后仍是特定课程
         //查找课程索引
         int index = 0;
-        qDebug() << "m_course" << m_course << "course" << ui->courseSelect->itemText(index).toUtf8().data();
-        for (; index < ui->courseSelect->count() && strcmp(m_course, ui->courseSelect->itemText(index).toUtf8().data()) != 0; index++) {
-
-        }
+        for (; index < ui->courseSelect->count() && strcmp(m_course, ui->courseSelect->itemText(index).toUtf8().data()) != 0; index++);
         m_index = index;
         //课程选择设置为对应索引，并禁用
         ui->courseSelect->setCurrentIndex(m_index);
-        // ui->courseSelect->setEnabled(false);
+        ui->courseSelect->setEnabled(false);
         //填入成绩
         ui->gradeEdit->setText(QString::number(newStudent.stu_course_grade[m_index][1]));
     }
+    //添加奖项、论文
+    ui->awardSelect->clear();//防止重复调用后显示多余信息
     for (int i = 0; newStudent.stu_award[i].competition_level != NULL; i++) {
         ui->awardSelect->addItem(newStudent.stu_award[i].award_name);
     }
+    ui->paperSelect->clear();
     for (int i = 0; newStudent.stu_paper[i].paper_name[0] != '\0'; i++) {
         ui->paperSelect->addItem(newStudent.stu_paper[i].paper_name);
     }

@@ -45,14 +45,12 @@ FindStudentDialog::FindStudentDialog(QWidget *parent, stu_list *studentList, cha
             retStudentDialog->setWindowTitle("查找学生");
             retStudentDialog->setModal(true);
             retStudentDialog->findCnt = ret;
-            retStudentDialog->setStudent(0);
             retStudentDialog->show();
         } else { //教师端：修改成绩
             AddStudentDialog *retStudentDialog = new AddStudentDialog(this, studentList, true, m_course);
             retStudentDialog->setWindowTitle("查找学生");
             retStudentDialog->setModal(true);
             retStudentDialog->findCnt = ret;
-            retStudentDialog->setStudent(0);
             retStudentDialog->show();
         }
     });

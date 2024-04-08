@@ -70,6 +70,7 @@ AddAwardDialog::AddAwardDialog(QWidget *parent) :
         strcpy(newAward.award_hosted_by, ui->hostEdit->text().toUtf8().data());//主办方
         QString allWinner = ui->winnerEdit->text();//获奖者
         //拆分获奖者
+        newAward.award_winner_num = 0;
         QStringList winnners = allWinner.split("；");
         for (int i = 0; i < winnners.size(); ++i) {
             QString winnner = winnners[i];

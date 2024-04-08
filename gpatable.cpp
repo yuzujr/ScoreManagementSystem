@@ -138,7 +138,6 @@ GPATable::GPATable(QWidget *parent, stu_list *head, char course[], char college[
                 retStudentDialog->setWindowTitle("查找学生");
                 retStudentDialog->setModal(true);
                 retStudentDialog->findCnt = ret;
-                retStudentDialog->setStudent(0);
                 retStudentDialog->show();
             } else { //已被删除
                 QMessageBox::information(this, "提示", "该学生可能已被删除，重新进入本界面后刷新！");

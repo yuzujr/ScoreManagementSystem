@@ -56,7 +56,6 @@ void ScoreTable::printTable(Student *stu, int page) {
     //循环地添加单行数据
     for (int row = 0; page < pageNumber && row < 10 || page == pageNumber
         && row < realNumber - 10 * (page - 1)/*防止打印多余信息*/; ++row, ++startIndex) {
-        qDebug() << startIndex;
         if (stu->stu_course_grade[startIndex][1] != 0) {
             //添加课程名
             int courseIndex = stu->stu_course_grade[startIndex][0];
